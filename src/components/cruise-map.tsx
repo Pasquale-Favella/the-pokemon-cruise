@@ -143,10 +143,6 @@ function MapComponent({ cruise, activeDay = 1, onDaySelect }: CruiseMapProps) {
                   ${day.activities.map(activity => `<li>${activity}</li>`).join("")}
                 </ul>
               </div>
-              
-              <div style="margin-top: 10px; font-size: 12px; color: #888; text-align: center;">
-                Click for more details
-              </div>
             </div>
           `);
         

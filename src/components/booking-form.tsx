@@ -1,17 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useAtom } from 'jotai';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { CalendarIcon, Users, Ship, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
-import { 
-  bookingAtom, 
-  regionAtom, 
-  datesAtom, 
-  passengersAtom, 
-  cruiseIdAtom 
-} from '@/store/booking-atoms';
+import { useBookingForm } from '@/hooks/use-booking';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
@@ -20,11 +13,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent } from '@/components/ui/card';
 import { getAllRegions, getCruisesByRegion, cruises } from '@/data/cruises';
 
-export function BookingForm() {
-  const [region, setRegion] = useAtom(regionAtom);
-  const [cruiseId, setCruiseId] = useAtom(cruiseIdAtom);
-  const [dates, setDates] = useAtom(datesAtom);
-  const [passengers, setPassengers] = useAtom(passengersAtom);
+interface BookingFormProps {
+  hideSteps?: boolean;
+  hideLabels?: boolean;
+  enhancedLabels?: boolean;
+  initialStep?: 'destination' | 'dates' | 'travelers';
+}
+
+export function BookingForm({ hideSteps = false, hideLabels = false, enhancedLabels = false, initialStep = 'destination' }: BookingFormProps) {
+  const { 
+    region, setRegion, 
+    cruiseId, setCruiseId,
+    dates, setDates,
+    passengers, setPassengers, setAdults, setChildren,
+    initializeBooking
+  } = useBookingForm();
   const [isPassengersOpen, setIsPassengersOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   
@@ -33,15 +36,11 @@ export function BookingForm() {
 
   // Handle passenger count changes
   const handleAdultsChange = (value: number) => {
-    if (value >= 1 && value <= 10) {
-      setPassengers({ ...passengers, adults: value });
-    }
+    setAdults(value);
   };
 
   const handleChildrenChange = (value: number) => {
-    if (value >= 0 && value <= 10) {
-      setPassengers({ ...passengers, children: value });
-    }
+    setChildren(value);
   };
 
   // Format date range for display
@@ -51,16 +50,32 @@ export function BookingForm() {
     return `${format(dates.startDate, 'MMM d, yyyy')} - ${format(dates.endDate, 'MMM d, yyyy')}`;
   };
 
+  // Initialize booking and focus on the appropriate section based on initialStep
+  useEffect(() => {
+    // Initialize with defaults based on initial step
+    if (initialStep === 'dates') {
+      initializeBooking({ startDate: new Date() });
+      setIsCalendarOpen(true);
+    } else if (initialStep === 'travelers') {
+      initializeBooking({ adults: 2, children: 0 });
+      setIsPassengersOpen(true);
+    }
+  }, [initialStep, initializeBooking]);
+
   return (
-    <Card className="w-full mx-auto overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md rounded-lg">
-      <CardContent className="p-6">
+    <Card className={`w-full mx-auto overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md rounded-lg ${hideSteps ? 'shadow-none border-0 p-0' : ''}`}>
+      <CardContent className={`${hideSteps ? 'p-0' : 'p-6'}`}>
         {/* Form Controls - Stacked on mobile, inline on larger screens */}
-        <div className="md:flex md:items-end md:space-x-4 space-y-4 md:space-y-0">
-          {/* Combined Region & Cruise Selection */}
-          <div className="flex-1">
-            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-              Destination
-            </label>
+        <div className={`md:flex md:items-end md:space-x-4 ${hideSteps ? 'space-y-0' : 'space-y-4 md:space-y-0'}`}>
+          {/* Only show destination selector if initialStep is destination or hideSteps is false */}
+          {(initialStep === 'destination' || !hideSteps) && (
+            <div className="flex-1">
+            {!hideLabels && (
+              <label className={`block font-medium text-gray-700 dark:text-gray-300 ${enhancedLabels ? 'text-lg mb-3 flex items-center' : 'text-sm mb-2'}`}>
+                {enhancedLabels && <MapPin className="mr-2 h-5 w-5 text-primary" />}
+                Destination
+              </label>
+            )}
             <Select 
               value={cruiseId || 'all-destinations'} 
               onValueChange={(value) => {
@@ -103,13 +118,18 @@ export function BookingForm() {
                 }).flat()}
               </SelectContent>
             </Select>
-          </div>
+            </div>
+          )}
 
           {/* Date Selection */}
-          <div className="flex-1">
-            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-              Dates
-            </label>
+          {(initialStep === 'dates' || !hideSteps) && (
+            <div className="flex-1">
+            {!hideLabels && (
+              <label className={`block font-medium text-gray-700 dark:text-gray-300 ${enhancedLabels ? 'text-lg mb-3 flex items-center' : 'text-sm mb-2'}`}>
+                {enhancedLabels && <CalendarIcon className="mr-2 h-5 w-5 text-primary" />}
+                Travel Dates
+              </label>
+            )}
             <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -141,13 +161,18 @@ export function BookingForm() {
                 />
               </PopoverContent>
             </Popover>
-          </div>
+            </div>
+          )}
 
           {/* Passengers Selection */}
-          <div className="flex-1">
-            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
-              Travelers
-            </label>
+          {(initialStep === 'travelers' || !hideSteps) && (
+            <div className="flex-1">
+            {!hideLabels && (
+              <label className={`block font-medium text-gray-700 dark:text-gray-300 ${enhancedLabels ? 'text-lg mb-3 flex items-center' : 'text-sm mb-2'}`}>
+                {enhancedLabels && <Users className="mr-2 h-5 w-5 text-primary" />}
+                Travelers
+              </label>
+            )}
             <Popover open={isPassengersOpen} onOpenChange={setIsPassengersOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -226,10 +251,12 @@ export function BookingForm() {
                 </div>
               </PopoverContent>
             </Popover>
-          </div>
+            </div>
+          )}
 
           {/* Search Button - Inline with inputs on md+ screens */}
-          <div className="md:flex-none">
+          {!hideSteps && (
+            <div className="md:flex-none">
             <Button 
               asChild
               className="w-full md:w-auto px-6 bg-amber-500 hover:bg-amber-600 text-white font-medium h-10 rounded-md"
@@ -246,7 +273,8 @@ export function BookingForm() {
                 </span>
               </Link>
             </Button>
-          </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

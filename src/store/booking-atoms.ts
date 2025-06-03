@@ -89,3 +89,39 @@ export const resetBookingAtom = atom(
     set(bookingAtom, initialBookingState);
   }
 );
+
+// Initialize booking with partial values
+export interface InitialBookingValues {
+  cruiseId?: string | null;
+  region?: string | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
+  adults?: number;
+  children?: number;
+  cabinType?: string | null;
+}
+
+export const initializeBookingAtom = atom(
+  null,
+  (get, set, initialValues: InitialBookingValues) => {
+    const currentBooking = get(bookingAtom);
+    
+    // Update only the provided values
+    const updatedBooking: BookingState = {
+      ...currentBooking,
+      cruiseId: initialValues.cruiseId ?? currentBooking.cruiseId,
+      region: initialValues.region ?? currentBooking.region,
+      dates: {
+        startDate: initialValues.startDate ?? currentBooking.dates.startDate,
+        endDate: initialValues.endDate ?? currentBooking.dates.endDate,
+      },
+      passengers: {
+        adults: initialValues.adults ?? currentBooking.passengers.adults,
+        children: initialValues.children ?? currentBooking.passengers.children,
+      },
+      cabinType: initialValues.cabinType ?? currentBooking.cabinType,
+    };
+    
+    set(bookingAtom, updatedBooking);
+  }
+);

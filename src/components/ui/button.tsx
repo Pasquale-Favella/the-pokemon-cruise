@@ -20,6 +20,14 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        // Subtle Pokemon themed variants with minimal styling
+        pokered: "bg-[#FF5350] text-white shadow-xs hover:bg-[#FF5350]/90",
+        pokeblue: "bg-[#5A9CED] text-white shadow-xs hover:bg-[#5A9CED]/90",
+        pokeblack: "bg-[#333333] text-white shadow-xs hover:bg-[#333333]/90",
+        pokeyellow: "bg-[#FFDE00] text-[#333333] shadow-xs hover:bg-[#FFDE00]/90",
+        pokegreen: "bg-[#4DAD5B] text-white shadow-xs hover:bg-[#4DAD5B]/90",
+        pokeorange: "bg-[#FF9C34] text-white shadow-xs hover:bg-[#FF9C34]/90",
+        pokeorangeOutline: "border-2 border-[#FF9C34] bg-white text-[#FF9C34] font-semibold hover:bg-[#FF9C34]/10 shadow-xs",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

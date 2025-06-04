@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { getFeaturedCruises } from "@/data/cruises";
@@ -5,9 +7,15 @@ import { Button } from "@/components/ui/button";
 // Card components are no longer directly used here, they are in CruiseCard
 import { BookingForm } from "@/components/booking-form";
 import { CruiseCard } from "@/components/cruise-card"; // New CruiseCard component
+import OceanWaves from '@/components/ui/ocean-waves';
+import { usePokemonSprite } from "@/hooks/usePokemonSprite";
 
 export default function Home() {
   const featuredCruises = getFeaturedCruises();
+
+  const { spriteUrl: pikachuSprite, isLoading: pikachuLoading, error: pikachuError } = usePokemonSprite("pikachu");
+  const { spriteUrl: treeckoSprite, isLoading: treeckoLoading, error: treeckoError } = usePokemonSprite("treecko");
+  const { spriteUrl: skittySprite, isLoading: skittyLoading, error: skittyError } = usePokemonSprite("skitty");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -128,8 +136,8 @@ export default function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative overflow-hidden py-16 md:py-24 bg-primary text-primary-foreground pb-24 md:pb-32 lg:pb-40">
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Set Sail?</h2>
           <p className="text-xl max-w-2xl mx-auto mb-8">
             Book your dream Pokemon cruise adventure today and create memories that will last a lifetime.
@@ -137,6 +145,101 @@ export default function Home() {
           <Button asChild size="lg" variant="pokeorange">
             <Link href="/booking">Book Now</Link>
           </Button>
+        </div>
+        <OceanWaves />
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Hear From Our Happy Trainers!</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              See what fellow adventurers are saying about their Pokémon cruise experience.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
+              <p className="text-card-foreground mb-4 italic flex-grow">
+                "The Kanto cruise was an absolute dream! Seeing wild Pikachu in their natural habitat and battling alongside Gym Leader Brock was an unforgettable experience. Highly recommend!"
+              </p>
+              <div className="flex items-center mt-auto">
+                <Image src="/images/trainers/ash.png" alt="Trainer Ash" width={40} height={40} className="rounded-full mr-3" />
+                <div>
+                  <p className="font-semibold text-card-foreground">Ash Ketchum</p>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    Partner: Pikachu
+                    {pikachuLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
+                    {pikachuError && <span className="ml-1.5 text-xs text-red-500" title={pikachuError.message}>⚠️</span>}
+                    {!pikachuLoading && !pikachuError && pikachuSprite && (
+                      <Image
+                        src={pikachuSprite}
+                        alt="Pikachu"
+                        width={32}
+                        height={32}
+                        className="ml-1.5"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
+              <p className="text-card-foreground mb-4 italic flex-grow">
+                "As a Pokémon Professor, I was thrilled with the research opportunities on the Hoenn voyage. The crew was knowledgeable, and the diversity of Pokémon encountered was astounding!"
+              </p>
+              <div className="flex items-center mt-auto">
+                <Image src="/images/trainers/prof-birch.png" alt="Professor Birch" width={40} height={40} className="rounded-full mr-3" />
+                <div>
+                  <p className="font-semibold text-card-foreground">Professor Birch</p>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    Partner: Treecko
+                    {treeckoLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
+                    {treeckoError && <span className="ml-1.5 text-xs text-red-500" title={treeckoError.message}>⚠️</span>}
+                    {!treeckoLoading && !treeckoError && treeckoSprite && (
+                      <Image
+                        src={treeckoSprite}
+                        alt="Treecko"
+                        width={32}
+                        height={32}
+                        className="ml-1.5"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
+              <p className="text-card-foreground mb-4 italic flex-grow">
+                "The luxury cabins and gourmet food were top-notch, but the real highlight was the Pokémon Contest Spectacular show! My Skitty and I even won a ribbon!"
+              </p>
+              <div className="flex items-center mt-auto">
+                <Image src="/images/trainers/may.png" alt="Trainer May" width={40} height={40} className="rounded-full mr-3" />
+                <div>
+                  <p className="font-semibold text-card-foreground">May</p>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    Partner: Skitty
+                    {skittyLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
+                    {skittyError && <span className="ml-1.5 text-xs text-red-500" title={skittyError.message}>⚠️</span>}
+                    {!skittyLoading && !skittyError && skittySprite && (
+                      <Image
+                        src={skittySprite}
+                        alt="Skitty"
+                        width={32}
+                        height={32}
+                        className="ml-1.5"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

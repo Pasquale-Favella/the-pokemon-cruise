@@ -54,13 +54,25 @@ export function BookingSummaryWidget() {
   }
   
   const calculateTotal = () => {
-    const cabinPrice = selectedCabin?.price || selectedCruise.startingPrice;
-    const passengerCount = passengers.adults + passengers.children;
-    const taxesAndFees = 99;
+    if (!selectedCruise && !selectedCabin) return 0;
+
+    const { adults, children } = passengers;
+    const totalTravelers = adults + children;
+
+    let totalCruiseFare = 0;
+    if (selectedCruise && totalTravelers > 0) {
+      const adultCruiseFarePerPerson = selectedCruise.startingPrice;
+      const childCruiseFarePerPerson = adultCruiseFarePerPerson * 0.4; // 60% discount
+      totalCruiseFare = (adultCruiseFarePerPerson * adults) + (childCruiseFarePerPerson * children);
+    }
     
-    // Direct calculation: cabin price × number of travelers + taxes and fees
-    // No duration adjustment as per updated requirements
-    return (cabinPrice * Math.max(passengerCount, 1)) + taxesAndFees;
+    const cabinCost = selectedCabin ? selectedCabin.price : 0;
+    const taxesAndFees = 99; // Assuming this remains constant
+
+    // If only cabin is selected, total is cabin cost + taxes
+    if (!selectedCruise && selectedCabin) return cabinCost + taxesAndFees;
+    // If cruise is selected (with or without cabin)
+    return totalCruiseFare + cabinCost + taxesAndFees;
   };
 
   return (
@@ -103,7 +115,7 @@ export function BookingSummaryWidget() {
           <div>
             <h3 className="font-medium">Cabin Type</h3>
             <p>{selectedCabin.name}</p>
-            <p className="text-sm text-muted-foreground">${selectedCabin.price} per person</p>
+            <p className="text-sm text-muted-foreground">${selectedCabin.price.toFixed(2)}</p>
           </div>
         </>
       )}
@@ -112,24 +124,81 @@ export function BookingSummaryWidget() {
       
       <div>
         <h3 className="font-medium">Price Details</h3>
-        <div className="flex justify-between mt-2">
-          <span>Cabin Price</span>
-          <span>
-            ${selectedCabin?.price || selectedCruise.startingPrice}
-          </span>
-        </div>
-        <div className="flex justify-between mt-1">
-          <span>Passengers</span>
-          <span>x {Math.max(passengers.adults + passengers.children, 1)}</span>
-        </div>
-        <div className="flex justify-between mt-1">
-          <span>Taxes & Fees</span>
-          <span>$99</span>
+        
+        {selectedCruise && (passengers.adults > 0 || passengers.children > 0) && (
+          <>
+            <div className="flex justify-between mt-2 text-sm">
+              <span>Adult Cruise Fare (per person):</span>
+              <span>${selectedCruise.startingPrice.toFixed(2)}</span>
+            </div>
+            {passengers.children > 0 && (
+              <div className="flex justify-between mt-1 text-sm">
+                <span>Child Cruise Fare (per person, 60% off):</span>
+                <span>${(selectedCruise.startingPrice * 0.4).toFixed(2)}</span>
+              </div>
+            )}
+            {passengers.adults > 0 && (
+              <div className="flex justify-between mt-1 text-sm">
+                <span>Adults:</span>
+                <span>{passengers.adults}</span>
+              </div>
+            )}
+            {passengers.children > 0 && (
+              <div className="flex justify-between mt-1 text-sm">
+                <span>Children:</span>
+                <span>{passengers.children}</span>
+              </div>
+            )}
+            <div className="flex justify-between mt-1 text-sm font-medium">
+              <span>Total Cruise Fare:</span>
+              <span>
+                ${
+                  ((selectedCruise.startingPrice * passengers.adults) + 
+                  (selectedCruise.startingPrice * 0.4 * passengers.children)).toFixed(2)
+                }
+              </span>
+            </div>
+          </>
+        )}
+
+        {selectedCabin && (
+          <div className="flex justify-between mt-1 text-sm">
+            <span>Cabin Cost ({selectedCabin.name}):</span>
+            <span>${selectedCabin.price.toFixed(2)}</span>
+          </div>
+        )}
+
+        {(selectedCruise && (passengers.adults > 0 || passengers.children > 0) && selectedCabin) && (
+            <div className="flex justify-between mt-1 text-sm font-semibold">
+              <span>Subtotal (Cruise + Cabin):</span>
+              <span>
+                ${
+                  (
+                    (selectedCruise.startingPrice * passengers.adults) + 
+                    (selectedCruise.startingPrice * 0.4 * passengers.children) + 
+                    selectedCabin.price
+                  ).toFixed(2)
+                }
+              </span>
+            </div>
+        )}
+        
+        {/* Display only cabin subtotal if no cruise fare applicable */}
+        {!(selectedCruise && (passengers.adults > 0 || passengers.children > 0)) && selectedCabin && (
+            <div className="flex justify-between mt-1 text-sm font-semibold">
+              <span>Cabin Subtotal:</span>
+              <span>${selectedCabin.price.toFixed(2)}</span>
+            </div>
+        )}
+
+        <div className="flex justify-between mt-1 text-sm">
+          <span>Taxes & Fees:</span>
+          <span>$99.00</span>
         </div>
         <Separator className="my-2" />
         <div className="flex justify-between font-bold">
-          <span>Total</span>
-          <span>${calculateTotal()}</span>
+          <span>Total:</span>
+          <span>${calculateTotal().toFixed(2)}</span>
         </div>
       </div>
       

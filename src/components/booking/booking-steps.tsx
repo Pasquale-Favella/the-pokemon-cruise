@@ -1,187 +1,59 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
 import Image from "next/image";
 import { 
   Check, 
   ChevronLeft, 
   ChevronRight, 
   MapPin, 
-  Calendar, 
+  CalendarIcon, // Renamed from Calendar to avoid conflict if 'Calendar' component is used
   Users, 
   Ship, 
   Bed, 
-  CreditCard
+  CreditCard,
+  CreditCardIcon, // For Card Number
+  CalendarDaysIcon, // For Expiry Date
+  LockIcon, // For CVC
+  ShieldCheckIcon // For Silph Co. text
 } from "lucide-react";
-import { useBookingForm } from "@/hooks/use-booking";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { CabinSelector } from "@/components/booking/cabin-selector";
+// import { type CabinType } from "@/data/cruises"; // No longer directly used for getCabinDetails type
 import { BookingForm } from "@/components/booking-form";
-import { getAllRegions, getCruisesByRegion, getCruiseById, cruises } from "@/data/cruises";
-import { useAtom } from 'jotai';
-import { bookingAtom, cruiseIdAtom, regionAtom, datesAtom, passengersAtom, cabinTypeAtom } from '@/store/booking-atoms';
-
-const steps = [
-  { id: "details", title: "Trip Details", icon: Ship },
-  { id: "cabin", title: "Cabin", icon: Bed },
-  { id: "payment", title: "Payment", icon: CreditCard },
-];
+// import { getAllRegions, getCruisesByRegion, getCruiseById, cruises, type Cruise, type CabinType as CruiseCabinType } from "@/data/cruises"; // Handled by hook
+import { useBookingStepper, STEPS as bookingFlowSteps } from "@/hooks/use-booking-stepper"; // Import the new hook and steps constant
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 interface BookingStepsProps {
   initialCruiseId?: string;
 }
 
 export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
-  const [currentStep, setCurrentStep] = useState("details");
-  
   const {
-    region, setRegion,
-    cruiseId, setCruiseId,
-    dates, setDates,
-    passengers, setPassengers,
-    cabinType, setCabinType,
-    resetBooking,
-    initializeBooking
-  } = useBookingForm();
-  
-  const [isFormValid, setIsFormValid] = useState(false);
+    currentStep,
+    currentStepIndex,
+    steps,
+    isFormValid,
+    formErrors,
+    selectedCruise,
+    passengers,
+    dates,
+    cabinType,
+    handleNextStep,
+    handlePreviousStep,
+    handleCompleteBooking,
+    calculatePriceBreakdown,
+    formatDateRange,
+  } = useBookingStepper({ initialCruiseId });
 
-  // Initialize booking and set initial step based on preselected values
-  useEffect(() => {
-    if (initialCruiseId) {
-      const selectedCruise = getCruiseById(initialCruiseId);
-      if (selectedCruise) {
-        // Initialize booking state with cruise info
-        initializeBooking({
-          cruiseId: initialCruiseId,
-          region: selectedCruise.region
-        });
-        
-        // Stay on details step since it now includes destination, dates and travelers
-        setCurrentStep("details");
-      }
-    }
-  }, [initialCruiseId, initializeBooking]);
-  const [formErrors, setFormErrors] = useState<string[]>([]);
-  
-  // Get current step index
-  const currentStepIndex = steps.findIndex(step => step.id === currentStep);
-  
-  // Validate current step
-  useEffect(() => {
-    const errors: string[] = [];
-    let valid = false;
-    
-    switch(currentStep) {
-      case "details":
-        // Validate all trip details (destination, dates, travelers)
-        const hasCruise = !!cruiseId;
-        const hasDates = !!dates.startDate && !!dates.endDate;
-        const hasValidPassengers = passengers.adults > 0;
-        
-        valid = hasCruise && hasDates && hasValidPassengers;
-        
-        if (!hasCruise) errors.push("Please select a cruise");
-        if (!hasDates) errors.push("Please select your travel dates");
-        if (!hasValidPassengers) errors.push("At least one adult is required");
-        break;
-      case "cabin":
-        valid = !!cabinType;
-        if (!cabinType) errors.push("Please select a cabin type");
-        break;
-      case "payment":
-        // In a real app, this would validate payment details
-        valid = true;
-        break;
-    }
-    
-    setIsFormValid(valid);
-    setFormErrors(errors);
-  }, [currentStep, cruiseId, dates, passengers, cabinType]);
-  
-  // Handle next step
-  const handleNextStep = () => {
-    if (!isFormValid) return;
-    
-    const nextIndex = currentStepIndex + 1;
-    if (nextIndex < steps.length) {
-      setCurrentStep(steps[nextIndex].id);
-    }
-  };
-  
-  // Handle previous step
-  const handlePreviousStep = () => {
-    const prevIndex = currentStepIndex - 1;
-    if (prevIndex >= 0) {
-      setCurrentStep(steps[prevIndex].id);
-    }
-  };
-  
-  // Handle booking completion
-  const handleCompleteBooking = () => {
-    // In a real app, this would submit the booking
-    alert("Booking completed! Your Pokemon adventure awaits!");
-    resetBooking();
-    setCurrentStep("destination");
-  };
-  
-  // Get selected cruise details
-  const selectedCruise = cruiseId ? getCruiseById(cruiseId) : null;
-  
-  // Format date range for display
-  const formatDateRange = () => {
-    if (!dates.startDate) return 'Not selected';
-    if (!dates.endDate) return format(dates.startDate, 'MMM d, yyyy');
-    return `${format(dates.startDate, 'MMM d, yyyy')} - ${format(dates.endDate, 'MMM d, yyyy')}`;
-  };
-  
-  // Get cabin details
-  const getCabinDetails = () => {
-    if (!cabinType) return { name: 'Not selected', price: 0 };
-    
-    switch(cabinType) {
-      case 'standard':
-        return { name: 'Standard Cabin', price: 799 };
-      case 'deluxe':
-        return { name: 'Deluxe Suite', price: 1299 };
-      case 'premium':
-        return { name: 'Master Trainer Suite', price: 1999 };
-      default:
-        return { name: 'Not selected', price: 0 };
-    }
-  };
-  
-  // Calculate cabin subtotal (before taxes and fees)
-  const calculateCabinSubtotal = () => {
-    if (!cabinType || !selectedCruise) return 0;
-    
-    const cabinDetails = getCabinDetails();
-    const totalPassengers = passengers.adults + passengers.children;
-    
-    // Base cabin cost calculation - directly multiply price by number of travelers
-    // No duration adjustment as per updated requirements
-    const baseCabinCost = cabinDetails.price * totalPassengers;
-    
-    return Math.round(baseCabinCost);
-  };
-  
-  // Calculate total price
-  const calculateTotal = () => {
-    if (!cabinType || !selectedCruise) return 0;
-    
-    // Get subtotal
-    const subtotal = calculateCabinSubtotal();
-    
-    // Fixed taxes and fees
-    const taxesAndFees = 99;
-    
-    // Calculate total
-    return subtotal + taxesAndFees;
-  };
-  
+  const priceBreakdown = calculatePriceBreakdown();
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Progress Steps */}
@@ -273,7 +145,7 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
                 {/* Dates Section */}
                 <div className="mt-6">
                   <div className="flex items-center mb-2 text-blue-500">
-                    <Calendar className="mr-2 h-5 w-5" />
+                    <CalendarIcon className="mr-2 h-5 w-5" />
                     <span className="text-gray-700 dark:text-gray-300">Travel Dates</span>
                   </div>
                   <BookingForm 
@@ -302,99 +174,141 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
               <CabinSelector />
             )}
             
-            {currentStep === "payment" && (
+            {currentStep === "payment" && selectedCruise && priceBreakdown && (
               <div className="space-y-6">
-                <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 mr-3">
-                      <Image
-                        src="/images/pokeball-icon.svg"
-                        alt="Pokeball"
-                        width={32}
-                        height={32}
-                        className="animate-spin-slow"
-                      />
-                    </div>
-                    <h3 className="text-lg font-semibold">Demo Mode</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    This is a demo application. No actual payment will be processed.
-                    In a real application, this step would include a secure payment form.
-                  </p>
-                </div>
-                
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Booking Summary</h3>
-                  
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cruise:</span>
-                      <span className="font-medium">{selectedCruise?.name || 'Not selected'}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Region:</span>
-                      <span className="font-medium">{region || 'Not selected'}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Dates:</span>
-                      <span className="font-medium">{formatDateRange()}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Travelers:</span>
-                      <span className="font-medium">
-                        {passengers.adults} {passengers.adults === 1 ? 'Adult' : 'Adults'}
-                        {passengers.children > 0 && `, ${passengers.children} ${passengers.children === 1 ? 'Child' : 'Children'}`}
-                      </span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cabin Type:</span>
-                      <span className="font-medium">{getCabinDetails().name}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cabin Cost:</span>
-                      <span className="font-medium">${getCabinDetails().price}/person</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Total Cabin Cost:</span>
-                      <span className="font-medium">${getCabinDetails().price * (passengers.adults + passengers.children)} (${getCabinDetails().price} × {passengers.adults + passengers.children})</span>
-                    </div>
-                    
-                    <Separator />
-                    
-                    {/* Price Breakdown */}
-                    <div className="space-y-2 py-2">
-                      <h4 className="text-sm font-semibold">Price Breakdown</h4>
-                      
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Base Cabin Cost:</span>
-                        <span>${getCabinDetails().price} × {passengers.adults + passengers.children} travelers</span>
-                      </div>
-                      
-                      {/* Duration adjustment removed as per updated calculation requirements */}
-                      
-                      <div className="flex justify-between text-sm font-medium">
-                        <span>Cabin Subtotal:</span>
-                        <span>${calculateCabinSubtotal()}</span>
-                      </div>
-                      
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Taxes & Fees:</span>
-                        <span>$99</span>
+                {/* Card 1: Payment Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payment Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="text-center py-4 border-b border-dashed dark:border-gray-700 mb-6">
+                      <Image src="/images/pokeball-payment.svg" alt="Payment Pokeball" width={72} height={72} className="mx-auto mb-3 opacity-90" />
+                      <div className="flex items-center justify-center text-sm text-muted-foreground">
+                        <ShieldCheckIcon className="w-4 h-4 mr-2 text-green-500" />
+                        <span>Secure payment processing by <strong>Silph Co. Financial</strong>.</span>
                       </div>
                     </div>
                     
-                    <div className="flex justify-between font-bold pt-2">
-                      <span>Total:</span>
-                      <span>${calculateTotal()}</span>
+                    <div className="space-y-5"> {/* Demo Payment Form Fields Container - increased spacing slightly */}
+                      <div>
+                        <Label htmlFor="cardNumber" className="text-sm font-medium">Card Number</Label>
+                        <div className="relative mt-1">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <CreditCardIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </div>
+                          <Input id="cardNumber" placeholder="•••• •••• •••• ••••" className="pl-10" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                        <div className="md:col-span-3">
+                          <Label htmlFor="expiryDate" className="text-sm font-medium">Expiry Date</Label>
+                          <div className="relative mt-1">
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                              <CalendarDaysIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </div>
+                            <Input id="expiryDate" placeholder="MM / YY" className="pl-10" />
+                          </div>
+                        </div>
+                        <div className="md:col-span-2">
+                          <Label htmlFor="cvc" className="text-sm font-medium">CVC / CVV</Label>
+                          <div className="relative mt-1">
+                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                              <LockIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </div>
+                            <Input id="cvc" placeholder="•••" className="pl-10" />
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="cardHolder" className="text-sm font-medium">Cardholder Name</Label>
+                        <Input id="cardHolder" placeholder="Ash Ketchum" className="mt-1" />
+                      </div>
                     </div>
-                  </div>
-                </div>
+
+                    <div className="flex items-center space-x-2 pt-2">
+                      <Checkbox id="saveCard" className="border-2 border-gray-400 dark:border-gray-500 data-[state=checked]:border-primary" />
+                      <Label htmlFor="saveCard" className="text-sm font-medium text-foreground/90 cursor-pointer">
+                        Securely save this card for future PokéMart purchases.
+                      </Label>
+                    </div>
+
+                    <Separator className="my-6" />
+
+                    <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-muted-foreground">Or pay with:</h4>
+                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-1">
+                            <Button variant="outline" className="flex-1 py-3 hover:bg-muted/50 transition-colors duration-150">
+                                <Image src="/images/meowth-pay.svg" alt="Meowth Pay" width={22} height={22} className="mr-2 opacity-90"/> Meowth Pay
+                            </Button>
+                            <Button variant="outline" className="flex-1 py-3 hover:bg-muted/50 transition-colors duration-150">
+                                <Image src="/images/porygon-pay.svg" alt="Porygon Pay" width={22} height={22} className="mr-2 opacity-90"/> Porygon Pay
+                            </Button>
+                        </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Card 2: Price Breakdown */}
+                <Card>
+                  <CardHeader>
+                      <CardTitle>Final Price Breakdown</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {priceBreakdown && selectedCruise ? (
+                      <div className="space-y-1 py-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Adult Fare (x{priceBreakdown.numberOfAdults})</span>
+                          <span>${priceBreakdown.rawAdultFare.toFixed(2)} / person</span>
+                        </div>
+                        {priceBreakdown.numberOfChildren > 0 && (
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Child Fare (x{priceBreakdown.numberOfChildren})</span>
+                            <span>${priceBreakdown.childFarePerPerson.toFixed(2)} / person (60% off)</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between font-medium">
+                          <span className="text-muted-foreground">Total Cruise Fare</span>
+                          <span>${priceBreakdown.totalCruiseFare.toFixed(2)}</span>
+                        </div>
+
+                        {priceBreakdown.cabinName && priceBreakdown.cabinName !== "N/A" && (
+                          <div className="flex justify-between mt-1">
+                            <span className="text-muted-foreground flex items-center">
+                              Cabin ({priceBreakdown.cabinName})
+                              {priceBreakdown.cabinCapacity && priceBreakdown.cabinCapacity > 0 && (
+                                <span className="ml-1 text-xs flex items-center">
+                                  (<Image src="/images/pokeball-icon.svg" alt="Capacity" width={12} height={12} className="mr-1 opacity-75 inline-block" />
+                                  Max {priceBreakdown.cabinCapacity})
+                                </span>
+                              )}
+                            </span>
+                            <span>${priceBreakdown.cabinPrice.toFixed(2)}</span>
+                          </div>
+                        )}
+                        <Separator className="my-2" />
+                        <div className="flex justify-between font-semibold">
+                          <span className="text-muted-foreground">Subtotal (Cruise + Cabin)</span>
+                          <span>${priceBreakdown.subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Taxes & Fees</span>
+                          <span>${priceBreakdown.taxesAndFees.toFixed(2)}</span>
+                        </div>
+                        <Separator className="my-2" />
+                        <div className="flex justify-between font-bold text-base pt-1">
+                          <span>Total</span>
+                          <span>${priceBreakdown.total.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Select your cruise options to see the final price breakdown.</p>
+                    )}
+                    {/* The Separator and Total might be duplicated if the above doesn't replace the entire old block correctly. 
+                        The intention is for the above block to fully replace the old summary including its own total. 
+                        If there's a total line remaining below this from the old code, it should be removed by adjusting TargetContent.*/}
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>
@@ -441,26 +355,6 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
           )}
         </CardFooter>
       </Card>
-      
-      {/* Pokemon-themed decoration */}
-      <div className="flex justify-center mt-8">
-        <div className="flex space-x-4">
-          {["pikachu", "bulbasaur", "charmander", "squirtle"].map((pokemon) => (
-            <div key={pokemon} className="w-12 h-12 relative opacity-70 hover:opacity-100 transition-opacity">
-              <Image
-                src={`/images/pokemon/${pokemon}.png`}
-                alt={pokemon}
-                width={48}
-                height={48}
-                onError={(e) => {
-                  // Fallback if image doesn't exist
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

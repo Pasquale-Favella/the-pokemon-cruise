@@ -58,6 +58,8 @@ export function BookingSummaryWidget() {
     const passengerCount = passengers.adults + passengers.children;
     const taxesAndFees = 99;
     
+    // Direct calculation: cabin price × number of travelers + taxes and fees
+    // No duration adjustment as per updated requirements
     return (cabinPrice * Math.max(passengerCount, 1)) + taxesAndFees;
   };
 
@@ -134,7 +136,7 @@ export function BookingSummaryWidget() {
       <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/30 rounded-md border border-amber-200 dark:border-amber-800">
         <div className="flex items-center text-amber-800 dark:text-amber-400">
           <Image 
-            src="/images/pokeball-icon.png" 
+            src="/images/pokeball-icon.svg" 
             alt="Pokeball" 
             width={20} 
             height={20}

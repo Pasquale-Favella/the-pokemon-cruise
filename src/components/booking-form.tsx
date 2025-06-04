@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { getAllRegions, getCruisesByRegion, cruises } from '@/data/cruises';
+import Image from 'next/image';
 
 interface BookingFormProps {
   hideSteps?: boolean;
@@ -63,8 +64,10 @@ export function BookingForm({ hideSteps = false, hideLabels = false, enhancedLab
   }, [initialStep, initializeBooking]);
 
   return (
-    <Card className={`w-full mx-auto overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md rounded-lg ${hideSteps ? 'shadow-none border-0 p-0' : ''}`}>
-      <CardContent className={`${hideSteps ? 'p-0' : 'p-6'}`}>
+    <Card className={`w-full max-w-6xl mx-auto overflow-hidden relative 
+      border-2 border-amber-200 hover:border-amber-300 transition-colors duration-300
+      ${hideSteps ? 'shadow-none border-0 p-0' : 'shadow-md'}`}>
+      <CardContent className={`relative z-10 ${hideSteps ? 'p-0' : 'p-6'}`}>
         {/* Form Controls - Stacked on mobile, inline on larger screens */}
         <div className={`md:flex md:items-end md:space-x-4 ${hideSteps ? 'space-y-0' : 'space-y-4 md:space-y-0'}`}>
           {/* Only show destination selector if initialStep is destination or hideSteps is false */}
@@ -262,15 +265,16 @@ export function BookingForm({ hideSteps = false, hideLabels = false, enhancedLab
               className="w-full md:w-auto px-6 bg-amber-500 hover:bg-amber-600 text-white font-medium h-10 rounded-md"
             >
               <Link href={cruiseId ? `/cruises/${cruiseId}` : (region ? `/cruises?region=${region}` : "/cruises")}>
-                <span className="flex items-center">
-                  <svg width="16" height="16" viewBox="0 0 24 24" className="mr-2" aria-hidden="true">
-                    <circle fill="#FF0000" cx="12" cy="12" r="12"></circle>
-                    <rect fill="#FFFFFF" x="0" y="11" width="24" height="2"></rect>
-                    <circle fill="#FFFFFF" cx="12" cy="12" r="4"></circle>
-                    <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-                  </svg>
-                  Search
-                </span>
+                  <span className="flex items-center">
+                    <Image
+                      src="/images/pokeball-icon.svg"
+                      alt="Pokeball"
+                      width={16}
+                      height={16}
+                      className="mr-2"
+                    />
+                    Search
+                  </span>
               </Link>
             </Button>
             </div>

@@ -61,18 +61,7 @@ export function CabinSelector() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center space-x-2 mb-2">
-        <div className="w-6 h-6 relative">
-          <Image 
-            src="/images/pokeball-icon.png" 
-            alt="Pokeball" 
-            width={24} 
-            height={24} 
-            className="animate-pulse"
-          />
-        </div>
-        <h3 className="text-lg font-semibold">Select Your Cabin</h3>
-      </div>
+    
       
       <div className="grid grid-cols-1 gap-4">
         {cabinTypes.map((cabin) => (

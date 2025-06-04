@@ -21,6 +21,8 @@ import { Separator } from "@/components/ui/separator";
 import { CabinSelector } from "@/components/booking/cabin-selector";
 import { BookingForm } from "@/components/booking-form";
 import { getAllRegions, getCruisesByRegion, getCruiseById, cruises } from "@/data/cruises";
+import { useAtom } from 'jotai';
+import { bookingAtom, cruiseIdAtom, regionAtom, datesAtom, passengersAtom, cabinTypeAtom } from '@/store/booking-atoms';
 
 const steps = [
   { id: "details", title: "Trip Details", icon: Ship },
@@ -158,15 +160,12 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
     
     const cabinDetails = getCabinDetails();
     const totalPassengers = passengers.adults + passengers.children;
-    const duration = selectedCruise.duration || 7;
     
-    // Base cabin cost calculation
+    // Base cabin cost calculation - directly multiply price by number of travelers
+    // No duration adjustment as per updated requirements
     const baseCabinCost = cabinDetails.price * totalPassengers;
     
-    // Apply duration factor to cabin cost
-    const adjustedCabinCost = baseCabinCost * (duration / 7);
-    
-    return Math.round(adjustedCabinCost);
+    return Math.round(baseCabinCost);
   };
   
   // Calculate total price
@@ -309,7 +308,7 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
                   <div className="flex items-center mb-4">
                     <div className="w-8 h-8 mr-3">
                       <Image
-                        src="/images/pokeball-icon.png"
+                        src="/images/pokeball-icon.svg"
                         alt="Pokeball"
                         width={32}
                         height={32}
@@ -377,12 +376,7 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
                         <span>${getCabinDetails().price} × {passengers.adults + passengers.children} travelers</span>
                       </div>
                       
-                      {selectedCruise?.duration && selectedCruise.duration !== 7 && (
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Duration Adjustment:</span>
-                          <span>{selectedCruise.duration} days ({(selectedCruise.duration / 7).toFixed(1)}× factor)</span>
-                        </div>
-                      )}
+                      {/* Duration adjustment removed as per updated calculation requirements */}
                       
                       <div className="flex justify-between text-sm font-medium">
                         <span>Cabin Subtotal:</span>

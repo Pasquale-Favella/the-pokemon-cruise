@@ -37,6 +37,8 @@ export function BookingSummary({ bookingData, cruise }: BookingSummaryProps) {
     const passengerCount = Math.max(bookingData.passengers.length, 1);
     const taxesAndFees = 99;
     
+    // Direct calculation: cabin price × number of travelers + taxes and fees
+    // No duration adjustment as per updated requirements
     return (cabinPrice * passengerCount) + taxesAndFees;
   };
 

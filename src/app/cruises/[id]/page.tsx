@@ -55,7 +55,7 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {cruise.highlights.map((highlight, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="mr-2 mt-1 text-primary">•</span>
+                  <span className="mr-2 mt-1 text-amber-600">•</span>
                   <span>{highlight}</span>
                 </li>
               ))}
@@ -67,7 +67,7 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {cruise.amenities.map((amenity, index) => (
                 <li key={index} className="flex items-start">
-                  <span className="mr-2 mt-1 text-primary">•</span>
+                  <span className="mr-2 mt-1 text-amber-600">•</span>
                   <span>{amenity}</span>
                 </li>
               ))}
@@ -80,10 +80,10 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
             <CardContent className="p-6">
               <div className="text-center mb-4">
                 <p className="text-sm text-muted-foreground">Starting from</p>
-                <p className="text-3xl font-bold text-primary">${cruise.startingPrice}</p>
+                <p className="text-3xl font-bold text-amber-600">${cruise.startingPrice}</p>
                 <p className="text-sm text-muted-foreground">per person</p>
               </div>
-              <Button asChild className="w-full mb-4">
+              <Button asChild className="w-full mb-4 bg-amber-500 hover:bg-amber-600 text-white">
                 <Link href={`/booking?cruise=${cruise.id}`}>Book Now</Link>
               </Button>
               <div className="text-sm text-muted-foreground text-center">
@@ -141,7 +141,7 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
                       <p className="text-sm text-muted-foreground">Up to {cabin.capacity} guests</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-primary">${cabin.price}</p>
+                      <p className="text-lg font-bold text-amber-600">${cabin.price}</p>
                       <p className="text-xs text-muted-foreground">per person</p>
                     </div>
                   </div>
@@ -197,7 +197,7 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
         <p className="text-lg mb-6 max-w-2xl mx-auto">
           Book your spot on the {cruise.name} and explore the {cruise.region} region like never before!
         </p>
-        <Button asChild size="lg">
+        <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600 text-white">
           <Link href={`/booking?cruise=${cruise.id}`}>Book This Cruise</Link>
         </Button>
       </div>

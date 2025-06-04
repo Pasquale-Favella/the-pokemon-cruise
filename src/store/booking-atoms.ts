@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
+import { cruises as allCruisesData, Cruise, Port } from '@/data/cruises'; // Consolidated Cruise import, added Port
 import { atomWithStorage } from 'jotai/utils';
-import { Cruise } from '@/data/cruises';
 
 // Define the booking state types
 export interface BookingState {
@@ -125,3 +125,31 @@ export const initializeBookingAtom = atom(
     set(bookingAtom, updatedBooking);
   }
 );
+
+// Atoms for Cruise Search Filter on cruises page
+export const cruiseSearchTermAtom = atom('');
+export const cruiseRegionFilterAtom = atom('all'); // 'all' means 'All Regions'
+
+export const allCruiseRegionsAtom = atom((get) => {
+  const regions = new Set<string>();
+  allCruisesData.forEach(cruise => regions.add(cruise.region));
+  return Array.from(regions);
+});
+
+export const filteredCruisesAtom = atom((get) => {
+  const searchTerm = get(cruiseSearchTermAtom).toLowerCase();
+  const selectedRegion = get(cruiseRegionFilterAtom);
+
+  return allCruisesData.filter(cruise => {
+    const matchesRegion = selectedRegion === 'all' || cruise.region === selectedRegion;
+
+    const matchesSearchTerm = !searchTerm ||
+      cruise.name.toLowerCase().includes(searchTerm) ||
+      cruise.shortDescription.toLowerCase().includes(searchTerm) ||
+      cruise.region.toLowerCase().includes(searchTerm) || 
+      cruise.highlights.some(h => h.toLowerCase().includes(searchTerm)) ||
+      cruise.itinerary.some(stop => stop.port.name.toLowerCase().includes(searchTerm));
+
+    return matchesRegion && matchesSearchTerm;
+  });
+});

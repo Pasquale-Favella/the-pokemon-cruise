@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getFeaturedCruises } from "@/data/cruises";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+// Card components are no longer directly used here, they are in CruiseCard
 import { BookingForm } from "@/components/booking-form";
+import { CruiseCard } from "@/components/cruise-card"; // New CruiseCard component
 
 export default function Home() {
   const featuredCruises = getFeaturedCruises();
@@ -52,50 +53,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredCruises.map((cruise) => (
-              <Card key={cruise.id} className="overflow-hidden transition-all hover:shadow-lg">
-                <div className="relative h-48 w-full overflow-hidden">
-                  <Image 
-                    src={cruise.images[0] || "/images/cruise-placeholder.jpg"}
-                    alt={cruise.name}
-                    fill
-                    className="object-cover transition-transform hover:scale-105"
-                  />
-                </div>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle>{cruise.name}</CardTitle>
-                      <CardDescription>{cruise.region} Region</CardDescription>
-                    </div>
-                    <span className="text-lg font-bold text-primary">
-                      ${cruise.startingPrice}
-                    </span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">{cruise.shortDescription}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {cruise.highlights.slice(0, 2).map((highlight, index) => (
-                      <span 
-                        key={index} 
-                        className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full"
-                      >
-                        {highlight}
-                      </span>
-                    ))}
-                    {cruise.highlights.length > 2 && (
-                      <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded-full">
-                        +{cruise.highlights.length - 2} more
-                      </span>
-                    )}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full" variant="pokeblue">
-                    <Link href={`/cruises/${cruise.id}`}>View Details</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+              <CruiseCard key={cruise.id} cruise={cruise} />
             ))}
           </div>
 

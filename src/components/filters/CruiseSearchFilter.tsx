@@ -4,18 +4,20 @@ import { useAtom } from 'jotai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cruiseSearchTermAtom, cruiseRegionFilterAtom, allCruiseRegionsAtom } from '@/store/booking-atoms';
+import { cruiseSearchTermAtom, cruiseRegionFilterAtom, allCruiseRegionsAtom, cruiseDurationFilterAtom } from '@/store/booking-atoms';
 import { Label } from '@/components/ui/label';
-import { Search, MapPin, X, Filter } from 'lucide-react';
+import { Search, MapPin, X, Filter, Clock } from 'lucide-react'; // Removed Chevron icons
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 
 export function CruiseSearchFilter() {
   const [searchTerm, setSearchTerm] = useAtom(cruiseSearchTermAtom);
   const [regionFilter, setRegionFilter] = useAtom(cruiseRegionFilterAtom);
+  const [durationFilter, setDurationFilter] = useAtom(cruiseDurationFilterAtom);
   const [allRegions] = useAtom(allCruiseRegionsAtom);
   const [isMobile, setIsMobile] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // State for expandable section
 
   // Check if mobile view
   useEffect(() => {
@@ -31,12 +33,13 @@ export function CruiseSearchFilter() {
   const clearFilters = () => {
     setSearchTerm('');
     setRegionFilter('all');
+    setDurationFilter('all'); // Clear Jotai atom directly
   };
 
-  const hasActiveFilters = searchTerm || regionFilter !== 'all';
+  const hasActiveFilters = searchTerm || regionFilter !== 'all' || durationFilter !== 'all';
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -89,8 +92,9 @@ export function CruiseSearchFilter() {
               className="overflow-hidden"
             >
               <div className={`p-6 pt-${isMobile ? '0' : '6'}`}>
-                <div className="grid grid-cols-1 gap-6 md:flex md:flex-row md:gap-x-4 items-end">
-                  <div className="relative md:flex-1">
+                {/* Search bar and toggle button */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="relative flex-1">
                     <Label htmlFor="cruise-search" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
                       <Search className="h-4 w-4 mr-2 text-primary" />
                       Search Cruises
@@ -102,9 +106,8 @@ export function CruiseSearchFilter() {
                         placeholder="e.g., 'Kanto Queen', 'Safari Zone'"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-8 py-5"
+                        className="w-full pr-8 py-5 border border-gray-200 dark:border-gray-700"
                       />
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       {searchTerm && (
                         <button
                           onClick={() => setSearchTerm('')}
@@ -115,49 +118,151 @@ export function CruiseSearchFilter() {
                       )}
                     </div>
                   </div>
-                  
-                  <div className="md:w-64">
-                    <Label htmlFor="region-filter" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
-                      <MapPin className="h-4 w-4 mr-2 text-primary" />
-                      Filter by Region
-                    </Label>
-                    <Select value={regionFilter} onValueChange={setRegionFilter}>
-                      <SelectTrigger id="region-filter" className="w-full py-5">
-                        <SelectValue placeholder="All Regions" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Regions</SelectItem>
-                        {allRegions.map((region) => (
-                          <SelectItem key={region} value={region}>
-                            {region}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-end gap-3">
+                  {!isMobile && ( // Show toggle button only on non-mobile
                     <Button
-                      variant="ghost"
-                      onClick={clearFilters}
-                      disabled={!hasActiveFilters}
-                      className={`flex-1 md:flex-none gap-2 text-muted-foreground hover:text-foreground transition-opacity duration-150 ${
-                        hasActiveFilters ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-                      }`}
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 mt-auto" // Align with input bottom
+                      onClick={() => setIsExpanded(!isExpanded)}
                     >
-                      <X className="h-4 w-4" />
-                      <span>Clear filters</span>
-                    </Button>
-                    {isMobile && (
-                      <Button 
-                        onClick={() => setIsFilterOpen(false)}
-                        className="flex-1"
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        Apply
-                      </Button>
-                    )}
-                  </div>
+                        {/* Unknown Pokemon icon SVG */}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="size-8">
+                          <path d="M12 17h.01"/>
+                          <path d="M10 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/>
+                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                        </svg>
+                      </motion.div>
+                    </Button>
+                  )}
                 </div>
+
+                {/* Expandable filter section */}
+                <AnimatePresence>
+                  {isExpanded && !isMobile && ( // Show expandable section only when expanded and not mobile
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="grid grid-cols-1 gap-6 md:flex md:flex-row md:gap-x-4 md:w-full mb-4"> {/* Container for region and duration filters */}
+                        <div className="md:flex-1"> {/* Region filter takes half width */}
+                          <Label htmlFor="region-filter" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
+                            <MapPin className="h-4 w-4 mr-2 text-primary" />
+                            Filter by Region
+                          </Label>
+                          <Select value={regionFilter} onValueChange={setRegionFilter}>
+                            <SelectTrigger id="region-filter" className="w-full py-5 border border-gray-200 dark:border-gray-700">
+                              <SelectValue placeholder="All Regions" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Regions</SelectItem>
+                              {allRegions.map((region) => (
+                                <SelectItem key={region} value={region}>
+                                  {region}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="md:flex-1"> {/* Duration filter takes half width */}
+                          <Label htmlFor="duration-filter" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
+                            <Clock className="h-4 w-4 mr-2 text-primary" />
+                            Filter by Duration
+                          </Label>
+                          <Select value={durationFilter} onValueChange={(value) => setDurationFilter(value)}>
+                            <SelectTrigger id="duration-filter" className="w-full py-5 border border-gray-200 dark:border-gray-700">
+                              <SelectValue placeholder="All Durations" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Durations</SelectItem>
+                              <SelectItem value="1-7">1-7 Days</SelectItem>
+                              <SelectItem value="8-14">8-14 Days</SelectItem>
+                              <SelectItem value="15+">15+ Days</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="flex items-end gap-3 md:w-full"> {/* Clear filters button takes full width */}
+                        <Button
+                          variant="ghost"
+                          onClick={clearFilters}
+                          disabled={!hasActiveFilters}
+                          className={`flex-1 md:flex-none gap-2 text-muted-foreground hover:text-foreground transition-opacity duration-150 ${
+                            hasActiveFilters ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+                          }`}
+                        >
+                          <X className="h-4 w-4" />
+                          <span>Clear filters</span>
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {isMobile && ( // Show all filters stacked on mobile
+                   <div className="grid grid-cols-1 gap-6">
+                     <div className="md:flex-1"> {/* Region filter takes half width */}
+                       <Label htmlFor="region-filter" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
+                         <MapPin className="h-4 w-4 mr-2 text-primary" />
+                         Filter by Region
+                       </Label>
+                       <Select value={regionFilter} onValueChange={setRegionFilter}>
+                         <SelectTrigger id="region-filter" className="w-full py-5 border border-gray-200 dark:border-gray-700">
+                           <SelectValue placeholder="All Regions" />
+                         </SelectTrigger>
+                         <SelectContent>
+                           <SelectItem value="all">All Regions</SelectItem>
+                           {allRegions.map((region) => (
+                             <SelectItem key={region} value={region}>
+                               {region}
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
+                     </div>
+
+                     <div className="md:flex-1"> {/* Duration filter takes half width */}
+                       <Label htmlFor="duration-filter" className="text-sm font-medium text-muted-foreground flex items-center mb-2">
+                         <Clock className="h-4 w-4 mr-2 text-primary" />
+                         Filter by Duration
+                       </Label>
+                       <Select value={durationFilter} onValueChange={(value) => setDurationFilter(value)}>
+                         <SelectTrigger id="duration-filter" className="w-full py-5 border border-gray-200 dark:border-gray-700">
+                           <SelectValue placeholder="All Durations" />
+                         </SelectTrigger>
+                         <SelectContent>
+                           <SelectItem value="all">All Durations</SelectItem>
+                           <SelectItem value="1-7">1-7 Days</SelectItem>
+                           <SelectItem value="8-14">8-14 Days</SelectItem>
+                           <SelectItem value="15+">15+ Days</SelectItem>
+                         </SelectContent>
+                       </Select>
+                     </div>
+
+                     <div className="flex items-end gap-3 md:w-full"> {/* Clear filters button takes full width */}
+                       <Button
+                         variant="ghost"
+                         onClick={clearFilters}
+                         disabled={!hasActiveFilters}
+                         className={`flex-1 md:flex-none gap-2 text-muted-foreground hover:text-foreground transition-opacity duration-150 ${
+                           hasActiveFilters ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+                         }`}
+                       >
+                         <X className="h-4 w-4" />
+                         <span>Clear filters</span>
+                       </Button>
+                     </div>
+                   </div>
+                )}
+
               </div>
             </motion.div>
           )}

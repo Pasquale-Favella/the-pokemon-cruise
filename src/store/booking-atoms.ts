@@ -130,6 +130,17 @@ export const initializeBookingAtom = atom(
 export const cruiseSearchTermAtom = atom('');
 export const cruiseRegionFilterAtom = atom('all'); // 'all' means 'All Regions'
 
+// Base atom for duration filter
+export const baseCruiseDurationFilterAtom = atom('all'); // 'all' means 'All Durations'
+
+// Derived atom for duration filter with a custom setter
+export const cruiseDurationFilterAtom = atom(
+  (get) => get(baseCruiseDurationFilterAtom),
+  (get, set, newValue: string) => {
+    set(baseCruiseDurationFilterAtom, newValue); // Update the base atom's value
+  }
+);
+
 export const allCruiseRegionsAtom = atom((get) => {
   const regions = new Set<string>();
   allCruisesData.forEach(cruise => regions.add(cruise.region));
@@ -139,6 +150,7 @@ export const allCruiseRegionsAtom = atom((get) => {
 export const filteredCruisesAtom = atom((get) => {
   const searchTerm = get(cruiseSearchTermAtom).toLowerCase();
   const selectedRegion = get(cruiseRegionFilterAtom);
+  const selectedDuration = get(cruiseDurationFilterAtom);
 
   return allCruisesData.filter(cruise => {
     const matchesRegion = selectedRegion === 'all' || cruise.region === selectedRegion;
@@ -146,10 +158,15 @@ export const filteredCruisesAtom = atom((get) => {
     const matchesSearchTerm = !searchTerm ||
       cruise.name.toLowerCase().includes(searchTerm) ||
       cruise.shortDescription.toLowerCase().includes(searchTerm) ||
-      cruise.region.toLowerCase().includes(searchTerm) || 
+      cruise.region.toLowerCase().includes(searchTerm) ||
       cruise.highlights.some(h => h.toLowerCase().includes(searchTerm)) ||
       cruise.itinerary.some(stop => stop.port.name.toLowerCase().includes(searchTerm));
 
-    return matchesRegion && matchesSearchTerm;
+    const matchesDuration = selectedDuration === 'all' ||
+      (selectedDuration === '1-7' && cruise.duration >= 1 && cruise.duration <= 7) ||
+      (selectedDuration === '8-14' && cruise.duration >= 8 && cruise.duration <= 14) ||
+      (selectedDuration === '15+' && cruise.duration >= 15);
+
+    return matchesRegion && matchesSearchTerm && matchesDuration;
   });
 });

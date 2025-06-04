@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { JotaiProvider } from "@/providers/jotai-provider";
 import "./globals.css";
+import Chatbot from "@/components/Chatbot"; // Import Chatbot component
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <Chatbot /> {/* Add Chatbot component here */}
           </JotaiProvider>
         </ThemeProvider>
       </body>

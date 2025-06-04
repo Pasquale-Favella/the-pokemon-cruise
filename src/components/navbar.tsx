@@ -82,12 +82,6 @@ export function Navbar() {
               Cruises
             </Link>
             <Link 
-              href="/regions" 
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Regions
-            </Link>
-            <Link 
               href="/about" 
               className="text-sm font-medium transition-colors hover:text-primary"
             >

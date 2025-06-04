@@ -10,8 +10,8 @@ interface CruiseCardProps {
 
 export function CruiseCard({ cruise }: CruiseCardProps) {
   return (
-    <Card key={cruise.id} className="overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
-      <div className="relative h-48 w-full overflow-hidden">
+    <Card key={cruise.id} className="pb-6 pt-0 border-0 overflow-hidden transition-all hover:shadow-lg flex flex-col h-full">
+      <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
         <Image 
           src={cruise.images[0] || "/images/cruise-placeholder.jpg"}
           alt={cruise.name}

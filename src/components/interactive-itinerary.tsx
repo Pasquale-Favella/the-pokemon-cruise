@@ -156,8 +156,8 @@ export function InteractiveItinerary({ cruise, activeDay: externalActiveDay, onD
             className="w-full"
           >
             {currentDay && (
-              <Card className="border-2 border-amber-100 overflow-hidden">
-                <div className="relative h-48 w-full overflow-hidden">
+              <Card className="pt-0 border-0 overflow-hidden">
+                <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
                   <Image 
                     src={currentDay.port.image || "/images/port-placeholder.jpg"}
                     alt={currentDay.port.name}
@@ -178,7 +178,7 @@ export function InteractiveItinerary({ cruise, activeDay: externalActiveDay, onD
                   </div>
                 </div>
                 
-                <CardContent className="p-6">
+                <CardContent className="px-6 pt-6 pb-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <div className="flex items-center mb-2">
@@ -187,14 +187,7 @@ export function InteractiveItinerary({ cruise, activeDay: externalActiveDay, onD
                       </div>
                       <p className="text-sm text-muted-foreground mb-4">{currentDay.port.description}</p>
                       
-                      <div className="flex items-center mb-2">
-                        <Compass className="w-4 h-4 mr-2 text-amber-500" />
-                        <h5 className="font-medium">Coordinates</h5>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Lat: {currentDay.port.coordinates[0].toFixed(2)}, 
-                        Long: {currentDay.port.coordinates[1].toFixed(2)}
-                      </p>
+
                     </div>
                     
                     <div>

@@ -96,10 +96,12 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
 
       {/* Tabs for Itinerary and Cabins */}
       <Tabs defaultValue="itinerary" className="mb-12">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
-          <TabsTrigger value="cabins">Cabin Options</TabsTrigger>
-        </TabsList>
+          <div className="flex justify-center">
+            <TabsList className="inline-flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
+              <TabsTrigger value="itinerary" className="px-4 sm:px-5 py-3 -mb-px border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:border-amber-500 data-[state=active]:text-amber-600 data-[state=inactive]:border-transparent data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-gray-700 data-[state=inactive]:hover:border-gray-300 dark:data-[state=inactive]:hover:text-gray-300 dark:data-[state=inactive]:hover:border-gray-500">Itinerary</TabsTrigger>
+              <TabsTrigger value="cabins" className="px-4 sm:px-5 py-3 -mb-px border-b-2 font-medium text-sm whitespace-nowrap transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 data-[state=active]:border-amber-500 data-[state=active]:text-amber-600 data-[state=inactive]:border-transparent data-[state=inactive]:text-muted-foreground data-[state=inactive]:hover:text-gray-700 data-[state=inactive]:hover:border-gray-300 dark:data-[state=inactive]:hover:text-gray-300 dark:data-[state=inactive]:hover:border-gray-500">Cabin Options</TabsTrigger>
+            </TabsList>
+          </div>
         <TabsContent value="itinerary" className="pt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
@@ -125,8 +127,8 @@ export default function CruiseDetailPage({ params }: { params: Promise<{ id: str
           <h3 className="text-xl font-bold mb-4">Available Cabin Types</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {cruise.cabinTypes.map((cabin) => (
-              <Card key={cabin.id} className="overflow-hidden">
-                <div className="relative h-48 w-full">
+              <Card key={cabin.id} className="pt-0 border-0 overflow-hidden">
+                <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
                   <Image 
                     src={cabin.images[0] || "/images/cabin-placeholder.jpg"}
                     alt={cabin.name}

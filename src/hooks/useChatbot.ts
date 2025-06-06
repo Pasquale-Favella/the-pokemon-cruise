@@ -14,12 +14,14 @@ const chatbotMessagesAtom = atom<{ text: string; sender: 'user' | 'bot' }[]>([{ 
 const chatbotInputAtom = atom('');
 const chatbotOpenAtom = atom(false); // Atom for chatbot visibility
 const chatbotLoadingAtom = atom(false); // Atom for loading state
+const chatbotAvailableAtom = atom(true); // Atom for chatbot availability based on WebGPU support
 
 const useChatbot = () => {
   const [messages, setMessages] = useAtom(chatbotMessagesAtom);
   const [input, setInput] = useAtom(chatbotInputAtom);
   const [isOpen, setIsOpen] = useAtom(chatbotOpenAtom); // Use Jotai atom for open state
   const [isLoading, setIsLoading] = useAtom(chatbotLoadingAtom); // Use Jotai atom for loading state
+  const [isAvailable, setIsAvailable] = useAtom(chatbotAvailableAtom);
   const worker = useRef<Worker | null>(null);
 
   // Access booking atoms
@@ -29,6 +31,12 @@ const useChatbot = () => {
   // Access other booking atoms as needed
 
   useEffect(() => {
+    if (!navigator.gpu) {
+      setIsAvailable(false);
+      setMessages([{ text: "Sorry, your browser does not support WebGPU, which is required for the chatbot.", sender: 'bot' }]);
+      return;
+    }
+
     worker.current = new Worker(new URL('../worker.js', import.meta.url), {
       type: 'module',
     });
@@ -49,6 +57,13 @@ const useChatbot = () => {
         setIsLoading(false); // Set loading to false when update is received
       } else if (event.data.status === 'complete') {
         setIsLoading(false); // Set loading to false when complete
+      } else if (event.data.status === 'error') {
+        console.error('Chatbot worker error:', event.data.error); // Log the actual error from the worker
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: `Error: ${event.data.output || 'An unknown error occurred.'}`, sender: 'bot' }, // Prepend "Error:" and use a more specific default
+        ]);
+        setIsLoading(false); // Set loading to false on error
       }
     };
 
@@ -62,40 +77,7 @@ const useChatbot = () => {
       setMessages((prevMessages) => [...prevMessages, { text, sender: 'user' }]);
       setInput('');
       setIsLoading(true); // Set loading to true when message is sent
-
-      const lowerCaseText = text.toLowerCase();
-
-      if (lowerCaseText.includes('book') || lowerCaseText.includes('cruise')) {
-        const foundCruise = cruises.find(cruise => lowerCaseText.includes(cruise.name.toLowerCase()));
-        if (foundCruise) {
-          setCruiseId(foundCruise.id);
-          setMessages((prevMessages) => [...prevMessages, { text: `Okay, I've selected the ${foundCruise.name} for you.`, sender: 'bot' }]);
-        } else {
-           worker.current?.postMessage({ text });
-        }
-      } else if (lowerCaseText.includes('passengers') || lowerCaseText.includes('adults') || lowerCaseText.includes('children')) {
-         const adultsMatch = lowerCaseText.match(/(\d+)\s*adults?/);
-         const childrenMatch = lowerCaseText.match(/(\d+)\s*children?/);
-
-         let updatedPassengers = { ...passengers };
-
-         if (adultsMatch && adultsMatch[1]) {
-           updatedPassengers.adults = parseInt(adultsMatch[1], 10);
-         }
-         if (childrenMatch && childrenMatch[1]) {
-           updatedPassengers.children = parseInt(childrenMatch[1], 10);
-         }
-
-         if (adultsMatch || childrenMatch) {
-           setPassengers(updatedPassengers);
-           setMessages((prevMessages) => [...prevMessages, { text: `Okay, I've updated the passenger count to ${updatedPassengers.adults} adults and ${updatedPassengers.children} children.`, sender: 'bot' }]);
-         } else {
-           worker.current?.postMessage({ text });
-         }
-      }
-      else {
-        worker.current?.postMessage({ text });
-      }
+      worker.current?.postMessage({ text });
     }
   };
 
@@ -111,6 +93,7 @@ const useChatbot = () => {
     isOpen, // Expose isOpen state
     toggleChatbot, // Expose toggle function
     isLoading, // Expose isLoading state
+    isAvailable, // Expose isAvailable state
     // Expose booking state and setters if needed for the chatbot UI
     cruiseId,
     setCruiseId,

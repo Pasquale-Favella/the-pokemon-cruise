@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
-import { Bot, User } from 'lucide-react';
+import { Bot, User, Send } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import useChatbot from '../hooks/useChatbot';
 import { Button } from './ui/button'; // Import Button component
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from './ui/card'; // Import Card components
@@ -9,11 +10,18 @@ import { Input } from './ui/input'; // Import Input component
 import { ScrollArea } from './ui/scroll-area'; // Import ScrollArea component
 
 const Chatbot: React.FC = () => {
-  const { messages, input, setInput, sendMessage, isOpen, toggleChatbot, isLoading } = useChatbot();
+  const { messages, input, setInput, sendMessage, isOpen, toggleChatbot, isLoading, isAvailable } = useChatbot();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSend = () => {
     sendMessage(input);
   };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <>
@@ -33,40 +41,53 @@ const Chatbot: React.FC = () => {
             {/* Optionally add a close button here */}
           </CardHeader>
           <CardContent className="flex-grow overflow-hidden px-4 py-2"> {/* Adjusted padding */}
-            <ScrollArea className="h-full pr-4">
-              {messages.map((msg, index) => (
-                <div key={index} className={`flex items-start mb-4 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                  {msg.sender === 'bot' && <Bot size={20} className="mr-2 text-gray-600" />}
-                  <div className={`rounded-lg p-3 max-w-[80%] break-words ${msg.sender === 'user' ? 'bg-primary text-primary-foreground ml-auto' : 'bg-gray-200 text-gray-800'}`}>
-                    {msg.text}
+            {!isAvailable ? (
+              <div className="flex items-center justify-center h-full text-center text-gray-600">
+                Sorry, the chatbot is not available because your browser does not support WebGPU.
+              </div>
+            ) : (
+              <ScrollArea className="h-full pr-4">
+                {messages.map((msg, index) => (
+                  <div key={index} className={`flex items-start mb-4 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+                    {msg.sender === 'bot' && <Bot size={20} className="mr-2 text-gray-600" />}
+                    <div className={`rounded-lg p-3 max-w-[80%] break-words ${msg.sender === 'user' ? 'bg-primary text-primary-foreground ml-auto' : 'bg-gray-200 text-gray-800'}`}>
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    </div>
+                    {msg.sender === 'user' && <User size={20} className="ml-2 text-primary" />}
                   </div>
-                  {msg.sender === 'user' && <User size={20} className="ml-2 text-primary" />}
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex items-start mb-4">
-                  <Bot size={20} className="mr-2 text-gray-600" />
-                  <div className="rounded-lg p-3 max-w-[80%] break-words bg-gray-200 text-gray-800">
-                    Typing...
+                ))}
+                {isLoading && (
+                  <div className="flex items-start mb-4">
+                    <Bot size={20} className="mr-2 text-gray-600" />
+                    <div className="rounded-lg p-3 max-w-[80%] break-words bg-gray-200 text-gray-800">
+                      <img src="/images/pokeball-icon.svg" alt="typing indicator" className="h-6 w-6 animate-bounce" />
+                    </div>
                   </div>
-                </div>
-              )}
-            </ScrollArea>
+                )}
+                <div ref={messagesEndRef} />
+              </ScrollArea>
+            )}
           </CardContent>
           <CardFooter className="flex bg-gray-100 p-4"> {/* Added padding here */}
-            <Input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSend();
-                }
-              }}
-              placeholder="Ask about Pokemon cruises..."
-              className="flex-grow mr-2 rounded-md border border-gray-300 p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <Button onClick={handleSend} className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90">Send</Button>
+            {isAvailable && (
+              <>
+                <Input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSend();
+                    }
+                  }}
+                  placeholder="Ask about Pokemon cruises..."
+                  className="flex-grow mr-2 rounded-md border border-gray-300 p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <Button onClick={handleSend} size="icon" className="bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+                  <Send size={20} />
+                </Button>
+              </>
+            )}
           </CardFooter>
         </Card>
       )}

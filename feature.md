@@ -38,5 +38,9 @@ Implement a chatbot using `transformers.js` (Xenova Transformers) to assist user
 *   Integrate with the application's booking system to allow the chatbot to perform actions like checking cruise availability or initiating a booking.
 *   Improve natural language understanding to handle a wider range of user queries.
 *   Add support for multi-modal input (e.g., voice).
-```
-</write_to_file>
+*   **Enhance Chatbot's Understanding of Booking Intents:** Expand the chatbot's ability to understand various booking-related requests (selecting cruise, dates, passengers, etc.) by refining NLP in `useChatbot.ts` and `worker.js`.
+*   **Integrate Chatbot with Booking Stepper:** Connect the chatbot to the `useBookingStepper` hook to guide users through booking steps, track progress, and trigger step changes.
+*   **Implement In-Chat Booking Widgets:** Create interactive React components for selecting booking details (cruise, dates, passengers, cabin) directly within the chat interface, using booking state atoms.
+*   **Provide Booking State Feedback in Chat:** Update the chatbot to confirm booking selections and summarize the current booking state to the user in real-time.
+*   **Craft Detailed System Prompts:** Develop comprehensive system prompts to define the chatbot's persona and guide its behavior during booking assistance, including interaction with widgets and error handling.
+*   **Utilize Context7 for Documentation:** Use the `context7` MCP server for documentation search on relevant libraries or concepts during implementation.

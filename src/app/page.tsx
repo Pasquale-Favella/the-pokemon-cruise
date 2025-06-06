@@ -131,6 +131,23 @@ export default function Home() {
                 </Button>
               </div>
             </div>
+
+            <div className="relative h-64 rounded-lg overflow-hidden group">
+              <Image 
+                src="/images/sinnoh-region.png" 
+                alt="Sinnoh Region" 
+                fill 
+                className="object-cover transition-transform group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
+                <h3 className="text-2xl font-bold mb-2">Sinnoh</h3>
+                <p className="text-sm mb-4">An exotic land</p>
+                <Button asChild variant="pokeorange" size="sm">
+                  <Link href="/cruises?region=sinnoh">Explore Cruises</Link>
+                </Button>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

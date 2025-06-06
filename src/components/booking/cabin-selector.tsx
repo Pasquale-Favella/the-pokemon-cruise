@@ -6,7 +6,6 @@ import { Check, AlertTriangle } from "lucide-react";
 import { useBookingForm } from "@/hooks/use-booking";
 import { getCruiseById, type Cruise, type CabinType as CruiseCabinTypeFromData } from "@/data/cruises";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 
 export function CabinSelector() {
@@ -48,7 +47,7 @@ export function CabinSelector() {
             >
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row">
-                  <div className="relative w-full md:w-1/3 h-48 md:h-auto">
+                  <div className="relative w-full md:w-1/3 h-48">
                     <Image
                       src={cabin.images && cabin.images.length > 0 ? cabin.images[0] : "/images/cruise-placeholder.jpg"} // Use first image or placeholder
                       alt={cabin.name}

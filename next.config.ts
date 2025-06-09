@@ -6,12 +6,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'raw.githubusercontent.com',
-        port: '',
-        pathname: '/PokeAPI/sprites/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'picsum.photos',
         port: '',
         pathname: '/**',

@@ -6,11 +6,9 @@ import {
   passengersAtom,
   // Import other relevant booking atoms as needed
 } from '../store/booking-atoms';
-import { cruises } from '../data/cruises';
 
 // Define Jotai atoms for chatbot state
-// Initial welcome message - exclude from context if sending to a backend/worker that requires context
-const chatbotMessagesAtom = atom<{ text: string; sender: 'user' | 'bot' }[]>([{ text: "Hello! I'm Cruisebot. How can I help you plan your Pokemon cruise?", sender: 'bot' }]);
+const chatbotMessagesAtom = atom<{ text: string; sender: 'user' | 'bot' }[]>([]);
 const chatbotInputAtom = atom('');
 const chatbotOpenAtom = atom(false); // Atom for chatbot visibility
 const chatbotLoadingAtom = atom(false); // Atom for loading state
@@ -65,6 +63,15 @@ const useChatbot = () => {
         ]);
         setIsLoading(false); // Set loading to false on error
       }
+    };
+
+    worker.current.onerror = (error) => {
+      console.error('Chatbot worker error:', error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: 'An error occurred in the chatbot. Please try again later.', sender: 'bot' },
+      ]);
+      setIsLoading(false); // Set loading to false on worker error
     };
 
     return () => {

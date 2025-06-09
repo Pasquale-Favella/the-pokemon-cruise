@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, User, Send } from 'lucide-react';
+import { Bot, Send, User } from 'lucide-react'; // Import CircleUser
 import React, { useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import useChatbot from '../hooks/useChatbot';
@@ -47,13 +47,21 @@ const Chatbot: React.FC = () => {
               </div>
             ) : (
               <ScrollArea className="h-full pr-4">
+                {/* Static greeting message */}
+                <div className="flex items-start mb-4">
+                  <Bot size={20} className="mr-2 text-gray-600" />
+                  <div className="rounded-lg p-3 max-w-[80%] break-words bg-gray-200 text-gray-800">
+                    <ReactMarkdown>Hello! I'm Cruisebot. How can I help you plan your Pokemon cruise?</ReactMarkdown>
+                  </div>
+                </div>
+                {/* Dynamic messages */}
                 {messages.map((msg, index) => (
                   <div key={index} className={`flex items-start mb-4 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
                     {msg.sender === 'bot' && <Bot size={20} className="mr-2 text-gray-600" />}
                     <div className={`rounded-lg p-3 max-w-[80%] break-words ${msg.sender === 'user' ? 'bg-primary text-primary-foreground ml-auto' : 'bg-gray-200 text-gray-800'}`}>
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
                     </div>
-                    {msg.sender === 'user' && <User size={20} className="ml-2 text-primary" />}
+                    {msg.sender === 'user' && <User size={20} className="ml-2 text-primary" />} {/* Use CircleUser icon */}
                   </div>
                 ))}
                 {isLoading && (

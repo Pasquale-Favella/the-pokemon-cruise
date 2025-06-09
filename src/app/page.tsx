@@ -8,16 +8,11 @@ import { Button } from "@/components/ui/button";
 import { BookingForm } from "@/components/booking-form";
 import { CruiseCard } from "@/components/cruise-card"; // New CruiseCard component
 import OceanWaves from '@/components/ui/ocean-waves';
-import { usePokemonSprite } from "@/hooks/usePokemonSprite";
 import { useCruiseFilters } from "@/hooks/useCruiseFilters";
 
 export default function Home() {
   const featuredCruises = getFeaturedCruises();
    const { setRegionFilter } = useCruiseFilters();
-
-  const { spriteUrl: pikachuSprite, isLoading: pikachuLoading, error: pikachuError } = usePokemonSprite("pikachu");
-  const { spriteUrl: treeckoSprite, isLoading: treeckoLoading, error: treeckoError } = usePokemonSprite("treecko");
-  const { spriteUrl: skittySprite, isLoading: skittyLoading, error: skittyError } = usePokemonSprite("skitty");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -184,22 +179,11 @@ export default function Home() {
                 "The Kanto cruise was an absolute dream! Seeing wild Pikachu in their natural habitat and battling alongside Gym Leader Brock was an unforgettable experience. Highly recommend!"
               </p>
               <div className="flex items-center mt-auto">
-                <Image src="/images/trainers/ash.png" alt="Trainer Ash" width={40} height={40} className="rounded-full mr-3" />
+                <Image src="/images/testimonials/trainer-boy.png" alt="Trainer Ash" width={40} height={40} className="rounded-full mr-3" />
                 <div>
-                  <p className="font-semibold text-card-foreground">Ash Ketchum</p>
+                  <p className="font-semibold text-card-foreground">Bill</p>
                   <div className="flex items-center text-sm text-muted-foreground">
-                    Partner: Pikachu
-                    {pikachuLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
-                    {pikachuError && <span className="ml-1.5 text-xs text-red-500" title={pikachuError.message}>⚠️</span>}
-                    {!pikachuLoading && !pikachuError && pikachuSprite && (
-                      <Image
-                        src={pikachuSprite}
-                        alt="Pikachu"
-                        width={32}
-                        height={32}
-                        className="ml-1.5"
-                      />
-                    )}
+                    Trainer
                   </div>
                 </div>
               </div>
@@ -211,22 +195,11 @@ export default function Home() {
                 "As a Pokémon Professor, I was thrilled with the research opportunities on the Hoenn voyage. The crew was knowledgeable, and the diversity of Pokémon encountered was astounding!"
               </p>
               <div className="flex items-center mt-auto">
-                <Image src="/images/trainers/prof-birch.png" alt="Professor Birch" width={40} height={40} className="rounded-full mr-3" />
+                <Image src="/images/testimonials/researcher.png" alt="Professor Grey" width={40} height={40} className="rounded-full mr-3" />
                 <div>
-                  <p className="font-semibold text-card-foreground">Professor Birch</p>
+                  <p className="font-semibold text-card-foreground">Professor Grey</p>
                   <div className="flex items-center text-sm text-muted-foreground">
-                    Partner: Treecko
-                    {treeckoLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
-                    {treeckoError && <span className="ml-1.5 text-xs text-red-500" title={treeckoError.message}>⚠️</span>}
-                    {!treeckoLoading && !treeckoError && treeckoSprite && (
-                      <Image
-                        src={treeckoSprite}
-                        alt="Treecko"
-                        width={32}
-                        height={32}
-                        className="ml-1.5"
-                      />
-                    )}
+                    Researcher
                   </div>
                 </div>
               </div>
@@ -238,22 +211,11 @@ export default function Home() {
                 "The luxury cabins and gourmet food were top-notch, but the real highlight was the Pokémon Contest Spectacular show! My Skitty and I even won a ribbon!"
               </p>
               <div className="flex items-center mt-auto">
-                <Image src="/images/trainers/may.png" alt="Trainer May" width={40} height={40} className="rounded-full mr-3" />
+                <Image src="/images/testimonials/trainer-girl.png" alt="Trainer Girl" width={40} height={40} className="rounded-full mr-3" />
                 <div>
-                  <p className="font-semibold text-card-foreground">May</p>
+                  <p className="font-semibold text-card-foreground">Aurora</p>
                   <div className="flex items-center text-sm text-muted-foreground">
-                    Partner: Skitty
-                    {skittyLoading && <span className="ml-1.5 text-xs animate-pulse">...</span>}
-                    {skittyError && <span className="ml-1.5 text-xs text-red-500" title={skittyError.message}>⚠️</span>}
-                    {!skittyLoading && !skittyError && skittySprite && (
-                      <Image
-                        src={skittySprite}
-                        alt="Skitty"
-                        width={32}
-                        height={32}
-                        className="ml-1.5"
-                      />
-                    )}
+                    Trainer
                   </div>
                 </div>
               </div>

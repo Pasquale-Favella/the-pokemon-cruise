@@ -31,31 +31,6 @@ export function Footer() {
             </ul>
           </div>
           <div className="space-y-3">
-            <h3 className="text-lg font-medium">Cruises</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/cruises?region=kanto" className="text-sm text-muted-foreground hover:text-foreground">
-                  Kanto Region
-                </Link>
-              </li>
-              <li>
-                <Link href="/cruises?region=johto" className="text-sm text-muted-foreground hover:text-foreground">
-                  Johto Region
-                </Link>
-              </li>
-              <li>
-                <Link href="/cruises?region=hoenn" className="text-sm text-muted-foreground hover:text-foreground">
-                  Hoenn Region
-                </Link>
-              </li>
-              <li>
-                <Link href="/cruises/featured" className="text-sm text-muted-foreground hover:text-foreground">
-                  Featured Cruises
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="space-y-3">
             <h3 className="text-lg font-medium">Support</h3>
             <ul className="space-y-2">
               <li>

@@ -26,7 +26,17 @@ self.addEventListener('message', async (event) => {
       // We also add a progress callback to the pipeline so that we can
       // track model loading.
       self.postMessage(x);
+    }).catch(error => {
+      console.error('Pipeline loading error:', error);
+      self.postMessage({
+        status: 'error',
+        output: 'Failed to load the model pipeline. Please try again later.',
+      });
     });
+    
+    if (!generator) {
+      return; // Exit if pipeline loading failed  
+    }
 
     // Craft a detailed system prompt
     const systemPrompt = `<|begin_of_text|><|start_header_id|>system<|end_header_id|>

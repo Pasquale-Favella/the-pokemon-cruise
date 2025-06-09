@@ -25,7 +25,7 @@ function MapComponent({ cruise, activeDay = 1, onDaySelect }: CruiseMapProps) {
       try {
         const leaflet = await import('leaflet');
         L.current = leaflet.default;
- await import('leaflet/dist/leaflet.css' as any);
+ await import('leaflet/dist/leaflet.css' as unknown as any);
         setIsMapLoaded(true);
       } catch (error) {
         console.error('Error loading Leaflet:', error);
@@ -53,7 +53,7 @@ function MapComponent({ cruise, activeDay = 1, onDaySelect }: CruiseMapProps) {
 
     // Fix Leaflet icon issues
     const fixLeafletIcon = () => {
-      delete (L.current.Icon.Default.prototype as any)._getIconUrl;
+      delete (L.current.Icon.Default.prototype as unknown as any)._getIconUrl;
       L.current.Icon.Default.mergeOptions({
         iconRetinaUrl: "/images/map/marker.png",
         iconUrl: "/images/map/marker.png",
@@ -107,7 +107,7 @@ function MapComponent({ cruise, activeDay = 1, onDaySelect }: CruiseMapProps) {
       }).addTo(map);
 
       // Add markers for each port
-      cruise.itinerary.forEach((day, index) => {
+      cruise.itinerary.forEach((day) => {
         const marker = L.current.marker(day.port.coordinates, { icon: pokemonIcon })
           .addTo(map)
           .bindPopup(`

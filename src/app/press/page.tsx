@@ -25,7 +25,7 @@ function PressPage() {
           <li className="flex items-start">
              <span className="mr-2 text-primary">&bull;</span> {/* Using a styled bullet point */}
             <div>
-              <span className="font-medium text-foreground">April 20, 2024</span> - Pokemon Cruise Wins "Best Themed Cruise" Award
+              <span className="font-medium text-foreground">April 20, 2024</span> - Pokemon Cruise Wins &quot;Best Themed Cruise&quot; Award
             </div>
           </li>
         </ul>

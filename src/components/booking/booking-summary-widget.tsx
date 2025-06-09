@@ -2,9 +2,7 @@
 
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { format } from "date-fns";
 import { 
-  regionAtom, 
   cruiseIdAtom, 
   datesAtom, 
   passengersAtom, 
@@ -21,6 +19,7 @@ const formatDate = (date: Date | string | null) => {
     try {
       return new Date(date).toLocaleDateString();
     } catch (e) {
+      console.error("Invalid date string:", date, e);
       return date;
     }
   }
@@ -29,7 +28,6 @@ const formatDate = (date: Date | string | null) => {
 };
 
 export function BookingSummaryWidget() {
-  const [region] = useAtom(regionAtom);
   const [cruiseId] = useAtom(cruiseIdAtom);
   const [dates] = useAtom(datesAtom);
   const [passengers] = useAtom(passengersAtom);

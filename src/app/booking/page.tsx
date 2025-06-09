@@ -1,14 +1,11 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingSteps } from "@/components/booking/booking-steps";
 import { BookingSummaryWidget } from "@/components/booking/booking-summary-widget";
 
-export default function BookingPage() {
-  const searchParams = useSearchParams();
-  const initialCruiseId = searchParams.get("cruise");
+export default async function BookingPage({ params }: { params: Promise<{ cruise?: string }> }) {
+
+  const resolvedParams = await params;
+  const initialCruiseId = resolvedParams.cruise;
   
   return (
     <div className="container mx-auto px-4 py-12">
@@ -21,7 +18,7 @@ export default function BookingPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <BookingSteps initialCruiseId={initialCruiseId || undefined} />
+          <BookingSteps initialCruiseId={initialCruiseId} />
         </div>
 
         <div>

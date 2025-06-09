@@ -16,10 +16,5 @@ interface GPUAdapter {
   name: string;
 }
 
-interface GPUDeviceDescriptor {
-  // Define properties as needed, e.g., requiredFeatures, requiredLimits
-}
-
-interface GPUDevice {
-  // Define properties and methods as needed
-}
+type GPUDeviceDescriptor = any
+type GPUDevice = any

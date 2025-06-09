@@ -1,5 +1,4 @@
 import { useAtom } from 'jotai';
-import { useEffect } from 'react';
 import {
   bookingAtom,
   cruiseIdAtom,
@@ -9,9 +8,7 @@ import {
   cabinTypeAtom,
   resetBookingAtom,
   totalPassengersAtom,
-  BookingState,
   initializeBookingAtom,
-  InitialBookingValues
 } from '@/store/booking-atoms';
 
 // Hook for accessing the entire booking state

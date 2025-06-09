@@ -1,6 +1,7 @@
 "use client";
 
 import { Bot, Send, User } from 'lucide-react'; // Import CircleUser
+import Image from 'next/image';
 import React, { useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import useChatbot from '../hooks/useChatbot';
@@ -51,7 +52,7 @@ const Chatbot: React.FC = () => {
                 <div className="flex items-start mb-4">
                   <Bot size={20} className="mr-2 text-gray-600" />
                   <div className="rounded-lg p-3 max-w-[80%] break-words bg-gray-200 text-gray-800">
-                    <ReactMarkdown>Hello! I'm Cruisebot. How can I help you plan your Pokemon cruise?</ReactMarkdown>
+                    <ReactMarkdown>Hello! I&apos;m Cruisebot. How can I help you plan your Pokemon cruise?</ReactMarkdown>
                   </div>
                 </div>
                 {/* Dynamic messages */}
@@ -68,7 +69,7 @@ const Chatbot: React.FC = () => {
                   <div className="flex items-start mb-4">
                     <Bot size={20} className="mr-2 text-gray-600" />
                     <div className="rounded-lg p-3 max-w-[80%] break-words bg-gray-200 text-gray-800">
-                      <img src="/images/pokeball-icon.svg" alt="typing indicator" className="h-6 w-6 animate-bounce" />
+                      <Image src="/images/pokeball-icon.svg" alt="typing indicator" width={24} height={24} className="h-6 w-6 animate-bounce" />
                     </div>
                   </div>
                 )}

@@ -8,9 +8,7 @@ import {
   MapPin, 
   CalendarIcon, // Renamed from Calendar to avoid conflict if 'Calendar' component is used
   Users, 
-  Ship, 
-  Bed, 
-  CreditCard,
+  Ship,
   CreditCardIcon, // For Card Number
   CalendarDaysIcon, // For Expiry Date
   LockIcon, // For CVC
@@ -26,9 +24,7 @@ import { CabinSelector } from "@/components/booking/cabin-selector";
 // import { type CabinType } from "@/data/cruises"; // No longer directly used for getCabinDetails type
 import { BookingForm } from "@/components/booking-form";
 // import { getAllRegions, getCruisesByRegion, getCruiseById, cruises, type Cruise, type CabinType as CruiseCabinType } from "@/data/cruises"; // Handled by hook
-import { useBookingStepper, STEPS as bookingFlowSteps } from "@/hooks/use-booking-stepper"; // Import the new hook and steps constant
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
+import { useBookingStepper } from "@/hooks/use-booking-stepper"; // Import the new hook and steps constant
 
 interface BookingStepsProps {
   initialCruiseId?: string;
@@ -42,14 +38,10 @@ export function BookingSteps({ initialCruiseId }: BookingStepsProps) {
     isFormValid,
     formErrors,
     selectedCruise,
-    passengers,
-    dates,
-    cabinType,
     handleNextStep,
     handlePreviousStep,
     handleCompleteBooking,
     calculatePriceBreakdown,
-    formatDateRange,
   } = useBookingStepper({ initialCruiseId });
 
   const priceBreakdown = calculatePriceBreakdown();

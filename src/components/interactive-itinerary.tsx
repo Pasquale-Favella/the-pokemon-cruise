@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Cruise } from '@/data/cruises';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ChevronLeft, MapPin, Calendar, Ship, Compass } from 'lucide-react';
+import { ChevronRight, ChevronLeft, MapPin, Calendar, Ship } from 'lucide-react';
 
 interface InteractiveItineraryProps {
   cruise: Cruise;
@@ -191,7 +191,7 @@ export function InteractiveItinerary({ cruise, activeDay: externalActiveDay, onD
                     </div>
                     
                     <div>
-                      <h5 className="font-medium mb-3">Today's Activities:</h5>
+                      <h5 className="font-medium mb-3">Today&apos;s Activities:</h5>
                       <div className="space-y-2">
                         {currentDay.activities.map((activity, index) => (
                           <motion.div 

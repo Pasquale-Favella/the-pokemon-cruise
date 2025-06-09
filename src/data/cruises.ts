@@ -1,6 +1,3 @@
-import { StaticImageData } from "next/image";
-
-
 export interface Port {
   name: string;
   description: string;

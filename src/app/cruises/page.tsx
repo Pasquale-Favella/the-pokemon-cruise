@@ -1,10 +1,7 @@
 "use client"; // Required for Jotai hooks
 
-import Image from "next/image";
-import Link from "next/link";
 import { useAtom } from 'jotai';
 import { filteredCruisesAtom } from '@/store/booking-atoms';
-import { Button } from "@/components/ui/button";
 import { CruiseSearchFilter } from "@/components/filters/CruiseSearchFilter"; // New filter component
 import { CruiseCard } from "@/components/cruise-card"; // New CruiseCard component
 

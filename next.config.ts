@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@huggingface/transformers"],
   output: 'export',
   images: {
+    unoptimized: true , // Disable Next.js image optimization
     remotePatterns: [
       {
         protocol: 'https',

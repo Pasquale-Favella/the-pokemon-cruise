@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { format, differenceInCalendarDays } from "date-fns";
 import { useBookingForm } from "@/hooks/use-booking";
-import { getCruiseById, type Cruise, type CabinType as CruiseCabinType } from "@/data/cruises";
+import { getCruiseById, type Cruise } from "@/data/cruises";
 import { Ship, Bed, CreditCard } from "lucide-react";
 
 export const STEPS = [

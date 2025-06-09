@@ -77,7 +77,7 @@ const useChatbot = () => {
     return () => {
       worker.current?.terminate();
     };
-  }, []);
+  }, [setIsAvailable, setMessages, setIsLoading]);
 
   const sendMessage = (text: string) => {
     if (text.trim()) {

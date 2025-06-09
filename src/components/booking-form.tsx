@@ -7,11 +7,10 @@ import { CalendarIcon, Users, Ship, MapPin, ChevronDown, ChevronUp } from 'lucid
 import { useBookingForm } from '@/hooks/use-booking';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { getAllRegions, getCruisesByRegion, cruises } from '@/data/cruises';
+import { getAllRegions, cruises } from '@/data/cruises';
 import Image from 'next/image';
 
 interface BookingFormProps {
@@ -26,14 +25,13 @@ export function BookingForm({ hideSteps = false, hideLabels = false, enhancedLab
     region, setRegion, 
     cruiseId, setCruiseId,
     dates, setDates,
-    passengers, setPassengers, setAdults, setChildren,
+    passengers, setAdults, setChildren,
     initializeBooking
   } = useBookingForm();
   const [isPassengersOpen, setIsPassengersOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   
   const regions = getAllRegions();
-  const regionCruises = region ? getCruisesByRegion(region) : [];
 
   // Handle passenger count changes
   const handleAdultsChange = (value: number) => {

@@ -7,7 +7,7 @@ interface StepsProps extends React.HTMLAttributes<HTMLDivElement> {
   currentStep: number;
 }
 
-export function Steps({ currentStep, className, ...props }: StepsProps) {
+export function Steps({ className, ...props }: StepsProps) {
   return (
     <div className={cn("flex items-center", className)} {...props} />
   );

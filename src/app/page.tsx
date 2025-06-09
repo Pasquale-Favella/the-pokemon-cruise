@@ -21,9 +21,10 @@ export default function Home() {
         {/* Background image */}
         <div className="absolute inset-0 w-full h-full">
           <div className="absolute inset-0 bg-black/40 z-10"></div>
-          <img 
-            src="/images/hero-background.png" 
-            alt="Pokemon ocean background" 
+          <Image
+            src="/images/hero-background.png"
+            alt="Pokemon ocean background"
+            fill
             className="w-full h-full object-cover"
           />
         </div>
@@ -175,8 +176,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Testimonial 1 */}
             <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
-              <p className="text-card-foreground mb-4 italic flex-grow">
-                "The Kanto cruise was an absolute dream! Seeing wild Pikachu in their natural habitat and battling alongside Gym Leader Brock was an unforgettable experience. Highly recommend!"
+            <p className="text-card-foreground mb-4 italic flex-grow">
+                &quot;The Kanto cruise was an absolute dream! Seeing wild Pikachu in their natural habitat and battling alongside Gym Leader Brock was an unforgettable experience. Highly recommend!&quot;
               </p>
               <div className="flex items-center mt-auto">
                 <Image src="/images/testimonials/trainer-boy.png" alt="Trainer Ash" width={40} height={40} className="rounded-full mr-3" />
@@ -192,7 +193,7 @@ export default function Home() {
             {/* Testimonial 2 */}
             <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
               <p className="text-card-foreground mb-4 italic flex-grow">
-                "As a Pokémon Professor, I was thrilled with the research opportunities on the Hoenn voyage. The crew was knowledgeable, and the diversity of Pokémon encountered was astounding!"
+                &quot;As a Pokémon Professor, I was thrilled with the research opportunities on the Hoenn voyage. The crew was knowledgeable, and the diversity of Pokémon encountered was astounding!&quot;
               </p>
               <div className="flex items-center mt-auto">
                 <Image src="/images/testimonials/researcher.png" alt="Professor Grey" width={40} height={40} className="rounded-full mr-3" />
@@ -208,7 +209,7 @@ export default function Home() {
             {/* Testimonial 3 */}
             <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col">
               <p className="text-card-foreground mb-4 italic flex-grow">
-                "The luxury cabins and gourmet food were top-notch, but the real highlight was the Pokémon Contest Spectacular show! My Skitty and I even won a ribbon!"
+                &quot;The luxury cabins and gourmet food were top-notch, but the real highlight was the Pokémon Contest Spectacular show! My Skitty and I even won a ribbon!&quot;
               </p>
               <div className="flex items-center mt-auto">
                 <Image src="/images/testimonials/trainer-girl.png" alt="Trainer Girl" width={40} height={40} className="rounded-full mr-3" />

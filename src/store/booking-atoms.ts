@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { cruises as allCruisesData, Cruise, Port } from '@/data/cruises'; // Consolidated Cruise import, added Port
+import { cruises as allCruisesData } from '@/data/cruises'; // Consolidated Cruise import, added Port
 import { atomWithStorage } from 'jotai/utils';
 
 // Define the booking state types
@@ -141,7 +141,7 @@ export const cruiseDurationFilterAtom = atom(
   }
 );
 
-export const allCruiseRegionsAtom = atom((get) => {
+export const allCruiseRegionsAtom = atom(() => {
   const regions = new Set<string>();
   allCruisesData.forEach(cruise => regions.add(cruise.region));
   return Array.from(regions);

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Cruise } from "@/data/cruises";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useAtom } from 'jotai';

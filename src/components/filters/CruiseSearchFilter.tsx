@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Search, MapPin, X, Filter, Clock } from 'lucide-react'; // Removed Chevron icons
+import { Search, MapPin, X, Filter, Clock, ChevronDown } from 'lucide-react'; // Removed Chevron icons
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useEffect, useState } from 'react';
 import { useCruiseFilters } from '@/hooks/useCruiseFilters';
 
@@ -118,24 +119,26 @@ export function CruiseSearchFilter() {
                     </div>
                   </div>
                   {!isMobile && ( // Show toggle button only on non-mobile
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-10 w-10 mt-auto" // Align with input bottom
-                      onClick={() => setIsExpanded(!isExpanded)}
-                    >
-                      <motion.div
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        {/* Unknown Pokemon icon SVG */}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-8">
-                          <path d="M12 17h.01"/>
-                          <path d="M10 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/>
-                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                        </svg>
-                      </motion.div>
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-10 w-10 mt-auto" // Align with input bottom
+                          onClick={() => setIsExpanded(!isExpanded)}
+                        >
+                          <motion.div
+                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <ChevronDown className="size-8" />
+                          </motion.div>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>expand more</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
                 </div>
 

@@ -68,7 +68,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 text-center">
-            <Button asChild variant="secondary" size="lg">
+            <Button asChild variant="pokeorange" size="lg">
               <Link href="/cruises">View All Cruises</Link>
             </Button>
           </div>
@@ -96,7 +96,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Kanto</h3>
                 <p className="text-sm mb-4">The classic region where it all began</p>
-                <Button asChild variant="secondary" size="sm">
+                <Button asChild variant="pokeorange" size="sm">
                   <Link href="/cruises" onClick={() => setRegionFilter('Kanto')}>Explore Cruises</Link>
                 </Button>
               </div>
@@ -112,7 +112,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Johto</h3>
                 <p className="text-sm mb-4">A land of tradition and mythology</p>
-                <Button asChild variant="secondary" size="sm">
+                <Button asChild variant="pokeorange" size="sm">
                   <Link href="/cruises" onClick={() => setRegionFilter('Johto')}>Explore Cruises</Link>
                 </Button>
               </div>
@@ -128,7 +128,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Hoenn</h3>
                 <p className="text-sm mb-4">A region of diverse environments</p>
-                <Button asChild variant="secondary" size="sm">
+                <Button asChild variant="pokeorange" size="sm">
                   <Link href="/cruises" onClick={() => setRegionFilter('Hoenn')}>Explore Cruises</Link>
                 </Button>
               </div>
@@ -144,7 +144,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Sinnoh</h3>
                 <p className="text-sm mb-4">An exotic land</p>
-                <Button asChild variant="secondary" size="sm">
+                <Button asChild variant="pokeorange" size="sm">
                   <Link href="/cruises" onClick={() => setRegionFilter('Sinnoh')}>Explore Cruises</Link>
                 </Button>
               </div>

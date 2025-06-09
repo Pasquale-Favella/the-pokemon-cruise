@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@huggingface/transformers"],
+  output: 'export',
   images: {
     remotePatterns: [
       {

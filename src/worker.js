@@ -1,4 +1,4 @@
-import { pipeline, TextStreamer, env } from '@huggingface/transformers';
+import { pipeline, TextStreamer } from '@huggingface/transformers';
 import { cruises } from '@/data/cruises'; // Import cruise data using alias
 
 // Use the Singleton pattern to enable lazy construction of the pipeline.

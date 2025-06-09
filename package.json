@@ -1,6 +1,10 @@
 {
   "name": "the-pokemon-cruise",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pasquale-Favella/the-pokemon-cruise.git"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

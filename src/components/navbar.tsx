@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { Github } from "lucide-react";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -90,7 +91,12 @@ export function Navbar() {
           </nav>
           
           {/* Desktop Book Now button */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
+            <a href="https://github.com/Pasquale-Favella/the-pokemon-cruise" target="_blank" rel="noreferrer" className="text-sm font-medium transition-colors hover:text-primary">
+              <Button variant="outline" size="icon">
+                <Github className="h-4 w-4" />
+              </Button>
+            </a>
             <Link
               href="/booking"
               className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"

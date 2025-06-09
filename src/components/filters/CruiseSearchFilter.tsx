@@ -1,20 +1,27 @@
 "use client";
 
-import { useAtom } from 'jotai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cruiseSearchTermAtom, cruiseRegionFilterAtom, allCruiseRegionsAtom, cruiseDurationFilterAtom } from '@/store/booking-atoms';
 import { Label } from '@/components/ui/label';
 import { Search, MapPin, X, Filter, Clock } from 'lucide-react'; // Removed Chevron icons
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import { useCruiseFilters } from '@/hooks/useCruiseFilters';
 
 export function CruiseSearchFilter() {
-  const [searchTerm, setSearchTerm] = useAtom(cruiseSearchTermAtom);
-  const [regionFilter, setRegionFilter] = useAtom(cruiseRegionFilterAtom);
-  const [durationFilter, setDurationFilter] = useAtom(cruiseDurationFilterAtom);
-  const [allRegions] = useAtom(allCruiseRegionsAtom);
+  const {
+    searchTerm,
+    setSearchTerm,
+    regionFilter,
+    setRegionFilter,
+    durationFilter,
+    setDurationFilter,
+    allRegions,
+    clearFilters,
+    hasActiveFilters,
+  } = useCruiseFilters();
+
   const [isMobile, setIsMobile] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false); // State for expandable section
@@ -29,14 +36,6 @@ export function CruiseSearchFilter() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const clearFilters = () => {
-    setSearchTerm('');
-    setRegionFilter('all');
-    setDurationFilter('all'); // Clear Jotai atom directly
-  };
-
-  const hasActiveFilters = searchTerm || regionFilter !== 'all' || durationFilter !== 'all';
 
   return (
     <motion.div
@@ -130,7 +129,7 @@ export function CruiseSearchFilter() {
                         transition={{ duration: 0.3 }}
                       >
                         {/* Unknown Pokemon icon SVG */}
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="size-8">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-8">
                           <path d="M12 17h.01"/>
                           <path d="M10 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/>
                           <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>

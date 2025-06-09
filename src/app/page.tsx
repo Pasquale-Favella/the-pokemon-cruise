@@ -9,9 +9,11 @@ import { BookingForm } from "@/components/booking-form";
 import { CruiseCard } from "@/components/cruise-card"; // New CruiseCard component
 import OceanWaves from '@/components/ui/ocean-waves';
 import { usePokemonSprite } from "@/hooks/usePokemonSprite";
+import { useCruiseFilters } from "@/hooks/useCruiseFilters";
 
 export default function Home() {
   const featuredCruises = getFeaturedCruises();
+   const { setRegionFilter } = useCruiseFilters();
 
   const { spriteUrl: pikachuSprite, isLoading: pikachuLoading, error: pikachuError } = usePokemonSprite("pikachu");
   const { spriteUrl: treeckoSprite, isLoading: treeckoLoading, error: treeckoError } = usePokemonSprite("treecko");
@@ -94,8 +96,8 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Kanto</h3>
                 <p className="text-sm mb-4">The classic region where it all began</p>
-                <Button asChild variant="pokeorange" size="sm">
-                  <Link href="/cruises?region=kanto">Explore Cruises</Link>
+                <Button asChild variant="secondary" size="sm">
+                  <Link href="/cruises" onClick={() => setRegionFilter('Kanto')}>Explore Cruises</Link>
                 </Button>
               </div>
             </div>
@@ -110,8 +112,8 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Johto</h3>
                 <p className="text-sm mb-4">A land of tradition and mythology</p>
-                <Button asChild variant="pokeorange" size="sm">
-                  <Link href="/cruises?region=johto">Explore Cruises</Link>
+                <Button asChild variant="secondary" size="sm">
+                  <Link href="/cruises" onClick={() => setRegionFilter('Johto')}>Explore Cruises</Link>
                 </Button>
               </div>
             </div>
@@ -126,8 +128,8 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Hoenn</h3>
                 <p className="text-sm mb-4">A region of diverse environments</p>
-                <Button asChild variant="pokeorange" size="sm">
-                  <Link href="/cruises?region=hoenn">Explore Cruises</Link>
+                <Button asChild variant="secondary" size="sm">
+                  <Link href="/cruises" onClick={() => setRegionFilter('Hoenn')}>Explore Cruises</Link>
                 </Button>
               </div>
             </div>
@@ -142,8 +144,8 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Sinnoh</h3>
                 <p className="text-sm mb-4">An exotic land</p>
-                <Button asChild variant="pokeorange" size="sm">
-                  <Link href="/cruises?region=sinnoh">Explore Cruises</Link>
+                <Button asChild variant="secondary" size="sm">
+                  <Link href="/cruises" onClick={() => setRegionFilter('Sinnoh')}>Explore Cruises</Link>
                 </Button>
               </div>
             </div>

@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Pokemon Cruise
+
+This project is a web application for booking cruises in the world of Pokemon. It allows users to browse available cruises, select cabins, provide passenger details, and make payments.
+
+## Deployed Application
+
+You can access the deployed application here: [https://symphonious-starship-ce1917.netlify.app/](https://symphonious-starship-ce1917.netlify.app/)
 
 ## Getting Started
 

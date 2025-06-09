@@ -1,4 +1,6 @@
 # The Pokemon Cruise
+![image](https://github.com/user-attachments/assets/60c02eba-8d63-4b32-a32a-118d40d781cb)
+
 
 This project is a web application for booking cruises in the world of Pokemon. It allows users to browse available cruises, select cabins, provide passenger details, and make payments.
 
